@@ -1,0 +1,375 @@
+{
+  "version": "0.2.1",
+  "constitution": {
+    "title": "SSQL (संस्कृतम् SQL): The v1.0 Design Principles (Constitution)",
+    "markdown": "### **SSQL (संस्कृतम् SQL): The v1.0 Design Principles (Constitution)**\n\n#### **१. `मूलदृष्टिः` (The Core Vision): Relational Querying as Formal Instruction**\nSSQL is designed as a **formal grammatical instruction** between a `स्थपतिः` (database architect) and a `सहायकः` (relational engine), expressed in valid **Samskrutam** using the passive imperative mood (`कर्मणि लोट् लकारः`, such as `आह्रियताम्`, `रच्यताम्`, `निवेश्यताम्`, `परिवर्त्यताम्`, and `निष्कास्यताम्`).\n\n#### **२. `लौकिकक्षमता` (Real-World Capability)**\nSSQL is not a theoretical or toy query notation. Every design decision is guided by the principle that the language must be a **powerful, practical, and robust tool for real-world, production-grade relational databases**.\n* **`युक्तिः` (Rationale):** Queries written in SSQL compile deterministically to standard **SQLite** and **PostgreSQL**, supporting multi-table joins, aggregations, window functions (`OVER`, `PARTITION BY`, `ORDER BY`), Common Table Expressions (`WITH` / `WITH RECURSIVE`), set operations (`UNION`, `INTERSECT`, `EXCEPT`), views, indexes, and pure user-defined functions (`शुद्धम् कार्यम्`), alongside native Rust, Python (`ssql-py`), WebAssembly (`ssql-wasm`), and Language Server (`ssql-lsp`) tooling.\n\n#### **३. `अभिगम्यता तथा शिक्षणशास्त्रम्` (Accessibility and Pedagogy)**\nThe language is intentionally designed to be **accessible both to SQL developers and to a Sanskrit-speaking audience**, lowering the barrier to entry by aligning relational operations with classical Pāṇinian *Kāraka* theory and using **consistent grammatical patterns** (`[Name] इति [Type]`, `[Condition] इति नियमेन`, `[Column] इति समूहेन`) to reduce cognitive load.\n\n#### **४. `वाचिकता तथा शुद्धता` (Speakability and Purity): The Law of Graphemic Purity**\nThe core syntax of SSQL shall be composed **exclusively of Devanāgarī words, Devanāgarī numerals (`०`–`९`), and the daṇḍa (`।`)** with **zero English loan-words** (`SELECT`, `FROM`, `WHERE`, `INTEGER`, `VARCHAR`, etc. are strictly forbidden in SSQL syntax).\n* **Permitted Graphemic Exceptions (v1.0):**\n  1. String Delimiters (`\" \"`) for string literals and physical SQL table/column bindings (`\"books\" इति आख्या`).\n  2. Single-Line Comments (`//` or `--`).\n  3. Multi-Line Comments (`/* ... */`).\n  4. Decimal Separator (`.`) for `वास्तविकः` numeric literals (`०.९०`).\n  5. Escape Sequences inside string literals.\n  6. The minus sign of a negative constant, written against its digits (`-५`); a negative column takes the declined adjective instead (`ऋणात्मकम् मूल्यम्`).\n* **No parentheses:** SSQL is written without parentheses. Where a group is genuinely needed it is quoted with `यत् … इति`, and a longer value is named first (`इति आख्या`).\n\n#### **५. `स्पष्टतायाः सिद्धान्तः` (The Principle of Clarity)**\nDeeply nested, opaque sub-expressions are discouraged. Complex analytical queries should be decomposed into **named Common Table Expressions (`इति आख्या` / `इति सञ्ज्ञा`) or modular views (`इति दृश्यम्`)**, making relational dataflow self-documenting and straightforward to inspect.\n\n#### **६. `शुद्धप्रवाहस्य शैली` (The Pure Flow Style)**\nUser-defined functions (`शुद्धम् कार्यम्`) in SSQL follow a **pure, side-effect-free relational style** with a clear parameter signature (the passive `दीयते`/`दीयेते`/`दीयन्ते`, agreeing in number with the parameters) and a single return expression (`इति उत्तरम् प्रतिदीयताम्`).\n* **`युक्तिः` (Rationale):** Pure scalar functions can be safely inlined into SQLite expressions and compiled into `IMMUTABLE` SQL functions on PostgreSQL without hidden state mutations.\n\n#### **७. `व्याकरणाधारितनिर्माणम्` (Grammar-Based Construction)**\nRelational semantics in SSQL are directly encoded by the **grammatical engine of Samskrutam**, using **Vibhakti (nominal case)** and **Kāraka (semantic role)** rather than rigid positional keywords:\n* **Vibhakti-to-Relational Mapping:**\n  * **`प्रथमा` (1st, Nominative — `उक्तकर्म`):** Projected `SELECT` columns, aliases (`इति`), and the subject of passive verbs (`शीर्षकम् च मूल्यम् च आह्रियेताम्`).\n  * **`द्वितीया` (2nd, Accusative — `कर्म`):** Direct object of non-finite/absolutive verbs (`अपकर्षम् विशोध्य अवशिष्टम्`, `मूल्यम् च ५ च प्रदाय`).\n  * **`तृतीया` (3rd, Instrumental — `करणम् / सहार्थे`):** Associated table in `JOIN` (`आपणैः सह ... इति मेलनेन`), filtering rule (`इति नियमेन`), grouping (`इति समूहेन`), ordering (`इति क्रमेण`), equality comparison (`इत्यनेन समम्`, the तृतीया with a word of equality rather than a kāraka), and division divisor (`परिमाणेन विभज्य लब्धम्`).\n  * **`चतुर्थी` (4th, Dative — `सम्प्रदानम्`):** Beneficiary or target recipient of an operation.\n  * **`पञ्चमी` (5th, Ablative — `अपादानम्`):** Source table or CTE in `FROM` (`पुस्तकेभ्यः`, `सारात्`), greater/less-than comparison baseline (`२० इत्यस्मात् अधिकम्`, the ablative of comparison rather than a kāraka), and subtraction minuend (`मूल्यात् ५ विशोध्य अवशिष्टम्`).\n  * **`षष्ठी` (6th, Genitive — `सम्बन्धः`):** Qualified table-column ownership (`पुस्तकस्य शीर्षकम्`) and aggregate/function operand (`मूल्यस्य योगः`, `सङ्ख्यायाः गणना`).\n  * **`सप्तमी` (7th, Locative — `अधिकरणम्`):** Target table locus for `INSERT INTO` (`पुस्तकेषु ... निवेश्यताम्`) and `UPDATE` (`छात्रेषु ... परिवर्त्यताम्`).\n\n#### **८. `सुरक्षा तथा पूर्वानुमानम्` (Safety and Predictability)**\nThe SSQL compiler enforces **static grammatical and relational type safety** before any SQL is emitted:\n* **`युक्तिः` (Rationale):** This is achieved through:\n  1. **Three-Gender Concordance (`लिङ्गसमन्वयः`):** Every column in `schema.सं` declares its grammatical gender (`पुंलिङ्गम्`, `स्त्रीलिङ्गम्`, or `नपुंसकलिङ्गम्`), and the validator verifies that comparison pronouns (`इत्यनेन` vs. `इत्यनया`, `इत्यस्मात्` vs. `इत्यस्याः`), predicate adjectives (`समः`/`समा`/`समम्`, `अधिकः`/`अधिका`/`अधिकम्`, `रिक्तः`/`रिक्ता`/`रिक्तम्`), and DDL constraints agree with their referent column.\n  2. **Subject–Verb Number Agreement (`वचनसमन्वयः`):** The terminal *Karmaṇi Loṭ* verb must match the grammatical number of projected columns: singular `आह्रियताम्` (1 column), dual `आह्रियेताम्` (2 columns), or plural `आह्रियन्ताम्` (3+ columns); `सर्वम्`, all columns, is neuter singular and takes `आह्रियताम्`.\n  3. **Explicit Nullability & Schema Resolution:** Null checks (`रिक्तः`/`रिक्ता`/`रिक्तम् अस्ति`) and column references are statically verified against `schema.सं`.\n\n#### **९. `विस्तारणीयता तथा पारिस्थितिकी` (Extensibility and Ecosystem)**\nSSQL pairs a **small, principled grammatical core** with a full developer ecosystem: bidirectional SQL-to-SSQL transpilation (`--from-sql`), canonical formatting (`--fmt`), Pāṇinian *padapāṭha* linting (`--lint`), the *Adhyetā* word-by-word grammar breakdown in the playground, and the `ssql-lsp` Language Server for modern editors.\n\n#### **१०. `परिवर्तनस्य विधानम्` (The Law of Change)**\nSSQL is a living specification that evolves with care and deliberation. All proposed changes to the v1.0 grammar or vocabulary must be introduced via a formal proposal (`सम्भाषणपत्रम्` — Discourse Paper / RFC), ensuring that grammatical soundness, Pāṇinian concordance, and backward compatibility across the example verification corpus are preserved.\n\nThis is our constitution.\nIt serves as both an architectural charter for the SSQL compiler and an invitation to explore relational computing through the precision and beauty of Samskrutam.",
+    "articles": [
+      {
+        "number": "१",
+        "sanskrit": "मूलदृष्टिः",
+        "english": "The Core Vision",
+        "subtitle": "Relational Querying as Formal Instruction",
+        "header": "१. `मूलदृष्टिः` (The Core Vision): Relational Querying as Formal Instruction",
+        "body": "SSQL is designed as a **formal grammatical instruction** between a `स्थपतिः` (database architect) and a `सहायकः` (relational engine), expressed in valid **Samskrutam** using the passive imperative mood (`कर्मणि लोट् लकारः`, such as `आह्रियताम्`, `रच्यताम्`, `निवेश्यताम्`, `परिवर्त्यताम्`, and `निष्कास्यताम्`)."
+      },
+      {
+        "number": "२",
+        "sanskrit": "लौकिकक्षमता",
+        "english": "Real-World Capability",
+        "subtitle": "",
+        "header": "२. `लौकिकक्षमता` (Real-World Capability)",
+        "body": "SSQL is not a theoretical or toy query notation. Every design decision is guided by the principle that the language must be a **powerful, practical, and robust tool for real-world, production-grade relational databases**.\n* **`युक्तिः` (Rationale):** Queries written in SSQL compile deterministically to standard **SQLite** and **PostgreSQL**, supporting multi-table joins, aggregations, window functions (`OVER`, `PARTITION BY`, `ORDER BY`), Common Table Expressions (`WITH` / `WITH RECURSIVE`), set operations (`UNION`, `INTERSECT`, `EXCEPT`), views, indexes, and pure user-defined functions (`शुद्धम् कार्यम्`), alongside native Rust, Python (`ssql-py`), WebAssembly (`ssql-wasm`), and Language Server (`ssql-lsp`) tooling."
+      },
+      {
+        "number": "३",
+        "sanskrit": "अभिगम्यता तथा शिक्षणशास्त्रम्",
+        "english": "Accessibility and Pedagogy",
+        "subtitle": "",
+        "header": "३. `अभिगम्यता तथा शिक्षणशास्त्रम्` (Accessibility and Pedagogy)",
+        "body": "The language is intentionally designed to be **accessible both to SQL developers and to a Sanskrit-speaking audience**, lowering the barrier to entry by aligning relational operations with classical Pāṇinian *Kāraka* theory and using **consistent grammatical patterns** (`[Name] इति [Type]`, `[Condition] इति नियमेन`, `[Column] इति समूहेन`) to reduce cognitive load."
+      },
+      {
+        "number": "४",
+        "sanskrit": "वाचिकता तथा शुद्धता",
+        "english": "Speakability and Purity",
+        "subtitle": "The Law of Graphemic Purity",
+        "header": "४. `वाचिकता तथा शुद्धता` (Speakability and Purity): The Law of Graphemic Purity",
+        "body": "The core syntax of SSQL shall be composed **exclusively of Devanāgarī words, Devanāgarī numerals (`०`–`९`), and the daṇḍa (`।`)** with **zero English loan-words** (`SELECT`, `FROM`, `WHERE`, `INTEGER`, `VARCHAR`, etc. are strictly forbidden in SSQL syntax).\n* **Permitted Graphemic Exceptions (v1.0):**\n  1. String Delimiters (`\" \"`) for string literals and physical SQL table/column bindings (`\"books\" इति आख्या`).\n  2. Single-Line Comments (`//` or `--`).\n  3. Multi-Line Comments (`/* ... */`).\n  4. Decimal Separator (`.`) for `वास्तविकः` numeric literals (`०.९०`).\n  5. Escape Sequences inside string literals.\n  6. The minus sign of a negative constant, written against its digits (`-५`); a negative column takes the declined adjective instead (`ऋणात्मकम् मूल्यम्`).\n* **No parentheses:** SSQL is written without parentheses. Where a group is genuinely needed it is quoted with `यत् … इति`, and a longer value is named first (`इति आख्या`)."
+      },
+      {
+        "number": "५",
+        "sanskrit": "स्पष्टतायाः सिद्धान्तः",
+        "english": "The Principle of Clarity",
+        "subtitle": "",
+        "header": "५. `स्पष्टतायाः सिद्धान्तः` (The Principle of Clarity)",
+        "body": "Deeply nested, opaque sub-expressions are discouraged. Complex analytical queries should be decomposed into **named Common Table Expressions (`इति आख्या` / `इति सञ्ज्ञा`) or modular views (`इति दृश्यम्`)**, making relational dataflow self-documenting and straightforward to inspect."
+      },
+      {
+        "number": "६",
+        "sanskrit": "शुद्धप्रवाहस्य शैली",
+        "english": "The Pure Flow Style",
+        "subtitle": "",
+        "header": "६. `शुद्धप्रवाहस्य शैली` (The Pure Flow Style)",
+        "body": "User-defined functions (`शुद्धम् कार्यम्`) in SSQL follow a **pure, side-effect-free relational style** with a clear parameter signature (the passive `दीयते`/`दीयेते`/`दीयन्ते`, agreeing in number with the parameters) and a single return expression (`इति उत्तरम् प्रतिदीयताम्`).\n* **`युक्तिः` (Rationale):** Pure scalar functions can be safely inlined into SQLite expressions and compiled into `IMMUTABLE` SQL functions on PostgreSQL without hidden state mutations."
+      },
+      {
+        "number": "७",
+        "sanskrit": "व्याकरणाधारितनिर्माणम्",
+        "english": "Grammar-Based Construction",
+        "subtitle": "",
+        "header": "७. `व्याकरणाधारितनिर्माणम्` (Grammar-Based Construction)",
+        "body": "Relational semantics in SSQL are directly encoded by the **grammatical engine of Samskrutam**, using **Vibhakti (nominal case)** and **Kāraka (semantic role)** rather than rigid positional keywords:\n* **Vibhakti-to-Relational Mapping:**\n  * **`प्रथमा` (1st, Nominative — `उक्तकर्म`):** Projected `SELECT` columns, aliases (`इति`), and the subject of passive verbs (`शीर्षकम् च मूल्यम् च आह्रियेताम्`).\n  * **`द्वितीया` (2nd, Accusative — `कर्म`):** Direct object of non-finite/absolutive verbs (`अपकर्षम् विशोध्य अवशिष्टम्`, `मूल्यम् च ५ च प्रदाय`).\n  * **`तृतीया` (3rd, Instrumental — `करणम् / सहार्थे`):** Associated table in `JOIN` (`आपणैः सह ... इति मेलनेन`), filtering rule (`इति नियमेन`), grouping (`इति समूहेन`), ordering (`इति क्रमेण`), equality comparison (`इत्यनेन समम्`, the तृतीया with a word of equality rather than a kāraka), and division divisor (`परिमाणेन विभज्य लब्धम्`).\n  * **`चतुर्थी` (4th, Dative — `सम्प्रदानम्`):** Beneficiary or target recipient of an operation.\n  * **`पञ्चमी` (5th, Ablative — `अपादानम्`):** Source table or CTE in `FROM` (`पुस्तकेभ्यः`, `सारात्`), greater/less-than comparison baseline (`२० इत्यस्मात् अधिकम्`, the ablative of comparison rather than a kāraka), and subtraction minuend (`मूल्यात् ५ विशोध्य अवशिष्टम्`).\n  * **`षष्ठी` (6th, Genitive — `सम्बन्धः`):** Qualified table-column ownership (`पुस्तकस्य शीर्षकम्`) and aggregate/function operand (`मूल्यस्य योगः`, `सङ्ख्यायाः गणना`).\n  * **`सप्तमी` (7th, Locative — `अधिकरणम्`):** Target table locus for `INSERT INTO` (`पुस्तकेषु ... निवेश्यताम्`) and `UPDATE` (`छात्रेषु ... परिवर्त्यताम्`)."
+      },
+      {
+        "number": "८",
+        "sanskrit": "सुरक्षा तथा पूर्वानुमानम्",
+        "english": "Safety and Predictability",
+        "subtitle": "",
+        "header": "८. `सुरक्षा तथा पूर्वानुमानम्` (Safety and Predictability)",
+        "body": "The SSQL compiler enforces **static grammatical and relational type safety** before any SQL is emitted:\n* **`युक्तिः` (Rationale):** This is achieved through:\n  1. **Three-Gender Concordance (`लिङ्गसमन्वयः`):** Every column in `schema.सं` declares its grammatical gender (`पुंलिङ्गम्`, `स्त्रीलिङ्गम्`, or `नपुंसकलिङ्गम्`), and the validator verifies that comparison pronouns (`इत्यनेन` vs. `इत्यनया`, `इत्यस्मात्` vs. `इत्यस्याः`), predicate adjectives (`समः`/`समा`/`समम्`, `अधिकः`/`अधिका`/`अधिकम्`, `रिक्तः`/`रिक्ता`/`रिक्तम्`), and DDL constraints agree with their referent column.\n  2. **Subject–Verb Number Agreement (`वचनसमन्वयः`):** The terminal *Karmaṇi Loṭ* verb must match the grammatical number of projected columns: singular `आह्रियताम्` (1 column), dual `आह्रियेताम्` (2 columns), or plural `आह्रियन्ताम्` (3+ columns); `सर्वम्`, all columns, is neuter singular and takes `आह्रियताम्`.\n  3. **Explicit Nullability & Schema Resolution:** Null checks (`रिक्तः`/`रिक्ता`/`रिक्तम् अस्ति`) and column references are statically verified against `schema.सं`."
+      },
+      {
+        "number": "९",
+        "sanskrit": "विस्तारणीयता तथा पारिस्थितिकी",
+        "english": "Extensibility and Ecosystem",
+        "subtitle": "",
+        "header": "९. `विस्तारणीयता तथा पारिस्थितिकी` (Extensibility and Ecosystem)",
+        "body": "SSQL pairs a **small, principled grammatical core** with a full developer ecosystem: bidirectional SQL-to-SSQL transpilation (`--from-sql`), canonical formatting (`--fmt`), Pāṇinian *padapāṭha* linting (`--lint`), the *Adhyetā* word-by-word grammar breakdown in the playground, and the `ssql-lsp` Language Server for modern editors."
+      },
+      {
+        "number": "१०",
+        "sanskrit": "परिवर्तनस्य विधानम्",
+        "english": "The Law of Change",
+        "subtitle": "",
+        "header": "१०. `परिवर्तनस्य विधानम्` (The Law of Change)",
+        "body": "SSQL is a living specification that evolves with care and deliberation. All proposed changes to the v1.0 grammar or vocabulary must be introduced via a formal proposal (`सम्भाषणपत्रम्` — Discourse Paper / RFC), ensuring that grammatical soundness, Pāṇinian concordance, and backward compatibility across the example verification corpus are preserved."
+      }
+    ],
+    "closing": "This is our constitution.\nIt serves as both an architectural charter for the SSQL compiler and an invitation to explore relational computing through the precision and beauty of Samskrutam."
+  },
+  "tutorials": [
+    {
+      "id": "track-a-01",
+      "track_id": "track-a",
+      "track_title": "Track A: SSQL for SQL Developers",
+      "filename": "01-introduction.md",
+      "title": "Chapter 1: Introduction to SSQL",
+      "markdown": "# Chapter 1: Introduction to SSQL\n\n## What is SSQL?\n\n**SSQL is a subset of Samskrutam (Sanskrit)** designed for expressing database queries. The design goal is that valid SSQL code reads as natural Sanskrit prose, with only a few additional graphemes (numerals, operators) beyond standard Devanagari.\n\nSSQL compiles to standard SQL dialects (SQLite, PostgreSQL, etc.).\n\n## Why Sanskrit?\n\nSanskrit has a highly systematic grammar with **विभक्ति** (Vibhakti - case endings) that naturally map to SQL semantics:\n\n| Vibhakti | Sanskrit Name | SQL Role |\n|----------|---------------|----------|\n| प्रथमा | Nominative | SELECT columns, subjects |\n| द्वितीया | Accusative | Direct objects |\n| तृतीया | Instrumental | WHERE, GROUP BY, ORDER BY |\n| चतुर्थी | Dative | GRANT TO recipients (reserved; not yet parsed) |\n| पञ्चमी | Ablative | FROM source tables |\n| षष्ठी | Genitive | Property access (date's month) |\n| सप्तमी | Locative | INSERT INTO, UPDATE IN |\n\n## Your First Query\n\n**SQL:**\n```sql\nSELECT name, email FROM customers;\n```\n\n**SSQL:**\n```ssql\nग्राहकेभ्यः नाम च विद्युत्पत्रम् च आह्रियेताम् ।\n```\n\nLet's break this down:\n\n| SSQL | Role | Explanation |\n|------|------|-------------|\n| `ग्राहकेभ्यः` | FROM | ग्राहक (customer) + एभ्यः (पञ्चमी बहुवचन - ablative plural) |\n| `नाम` | SELECT | name (प्रथमा - nominative) |\n| `च` | AND | conjunction |\n| `विद्युत्पत्रम्` | SELECT | email (प्रथमा - nominative) |\n| `आह्रियेताम्` | FETCH | 3rd person dual passive imperative (\"let the two be fetched\") |\n\n## The Schema: Native DDL\n\nSchemas are declared directly in SSQL, using `इति आख्या ... रच्यताम् यत्र ... इति पटलम् ।` (`CREATE TABLE`) syntax — there is no separate mapping file:\n\n```ssql\nग्राहकाः इति पटलम् \"customers\" इति आख्या ग्राहक इति पुंलिङ्गम् बहुवचनम् रच्यताम् यत्र\n    सङ्ख्या इति प्राथमिकी क्रमिका पूर्णाङ्कः \"id\" इति आख्या सङ्ख्या इति स्त्रीलिङ्गम् एकवचनम् च\n    नाम इति अनिवार्यम् वाक्यम् \"name\" इति आख्या नामन् इति नपुंसकलिङ्गम् एकवचनम् च\n    विद्युत्पत्रम् इति अद्वितीयम् वाक्यम् \"email\" इति आख्या विद्युत्पत्र इति नपुंसकलिङ्गम् एकवचनम् च\n  इति पटलम् ।\n```\n\n### Column Data Types & Constraints\n\nEvery column declaration follows the pattern `<ColumnNominative> इति [Constraints...] <DataType> \"<sql_name>\" इति आख्या <Stem> इति <Gender> <Number>`, separated by `च`:\n\n| SSQL Keyword | SQL Equivalent | Notes |\n|--------------|----------------|-------|\n| `पूर्णाङ्कः` | `INTEGER` | Whole numbers |\n| `वास्तविकः` | `REAL` / `NUMERIC` | Floating-point / decimal numbers |\n| `वाक्यम्` | `TEXT` / `VARCHAR` | String / text columns |\n| `दिनाङ्कः` | `DATE` | Calendar date (`\"२०२५-०१-१५\"`) |\n| `प्राथमिकः` / `प्राथमिकी` / `प्राथमिकम्` | `PRIMARY KEY` | Primary key constraint |\n| `क्रमिकः` / `क्रमिका` / `क्रमिकम्` | `AUTOINCREMENT` | Auto-increment constraint (`प्राथमिकी क्रमिका सङ्ख्या`) |\n| `अनिवार्यः` / `अनिवार्या` / `अनिवार्यम्` | `NOT NULL` | Required column (inflected to agree with the column noun's gender) |\n| `वैकल्पिकः` / `वैकल्पिकी` / `वैकल्पिकम्` | `NULL` | Optional column |\n| `अद्वितीयः` / `अद्वितीया` / `अद्वितीयम्` | `UNIQUE` | Unique constraint |\n| `<table, locative plural> बद्धः` / `बद्धा` / `बद्धम्` (\"tied to\") | `REFERENCES <table>` | Foreign key constraint (e.g., `लेखकसङ्ख्या इति पूर्णाङ्कः लेखकेषु बद्धा \"author_id\" इति आख्या ...`) |\n\n> [!NOTE]\n> **Constraint Placement & Gender Agreement:** Column constraints may be placed either before the column name (`प्राथमिकी क्रमिका सङ्ख्या इति पूर्णाङ्कः`), after `इति` (`सङ्ख्या इति प्राथमिकी क्रमिका पूर्णाङ्कः`), or after the data type (`लेखकसङ्ख्या इति पूर्णाङ्कः लेखकेषु बद्धा`). Each agrees with the column noun in gender and number: `सङ्ख्या` is feminine, so `प्राथमिकी क्रमिका`; the compiler checks it.\n\n> [!WARNING]\n> **Reserved Keywords Cannot Be Used as Table or Column Stems**\n> Built-in SSQL grammar and window/analytical keywords are reserved and cannot be used as table, column, view, or CTE stems (`प्रातिपदिकम्`). Common words to avoid as column stems include:\n> - `विभाग` (reserved for `NTILE` / window partitioning) — use **`शाखा`** (`शाखाः` / `शाखा`) for \"department/branch\" instead.\n> - `बाह्या` (reserved for `बाह्या सञ्ज्ञा` external parameters)\n> - `क्रम`, `श्रेणी`, `विभाजन` (reserved for window `ORDER BY`, frames, and `PARTITION BY`)\n> - `सङ्कुल`, `कार्य`, `क्रिया` (reserved for modules and UDF declarations)\n\n## Data Manipulation Language (DML): `INSERT`, `UPDATE`, `DELETE`\n\nSSQL uses the **Locative Plural (`सप्तमी बहुवचनम्`, `-एषु` / `-आसु`)** for `INSERT INTO` and `UPDATE`, and the **Ablative Plural (`पञ्चमी बहुवचनम्`, `-एभ्यः` / `-आभ्यः`)** for `DELETE FROM`:\n\n### 1. `INSERT INTO` (`निवेश्यताम्` / `निवेश्येताम्` / `निवेश्यन्ताम्`)\nPlace the target table in the **Locative Plural** (`पुस्तकेषु` = \"into books\"), list each `<ColumnNominative> <Value>` pair followed by `च`, and end with the passive verb. The columns are the verb's subject, so - exactly as with `आह्रियताम्` in a `SELECT` - its number agrees with how many there are: `निवेश्यताम्` for one column, `निवेश्येताम्` for two, `निवेश्यन्ताम्` for three or more:\n\n```ssql\nपुस्तकेषु सङ्ख्या १०१ च शीर्षकम् \"अष्टाध्यायी\" च अङ्कः \"978-0000000101\" च भाषा \"Sanskrit\" च मूल्यम् ५० च निवेश्यन्ताम् ।\n```\n\n### 2. `UPDATE` (`इति परिवर्त्यताम्`)\nPlace the target table in the **Locative Plural** (`पुस्तकेषु`), filter with `इति नियमेन` (`WHERE`), give each new value as `<ColumnNominative> <NewValue> इति` (`इति` marks the value as the column's new content), and end with `परिवर्त्यताम् ।` (\"let it be changed\"):\n\n```ssql\nपुस्तकेषु सङ्ख्या १०१ इत्यनया समा अस्ति इति नियमेन मूल्यम् ६० इति परिवर्त्यताम् ।\n```\n\nThe verb agrees in number with the columns it changes. Several columns form a `च`-list, each with its own `च`, and take the dual or plural, `परिवर्त्येताम्` / `परिवर्त्यन्ताम्`:\n\n```ssql\nपुस्तकेषु सङ्ख्या १०१ इत्यनया समा अस्ति इति नियमेन मूल्यम् ६० इति च भाषा \"पालि\" इति च परिवर्त्येताम् ।\n```\n\nAn `UPDATE` always says which rows it changes. To change every row, say so with `सर्वत्र` (\"everywhere\"); an `UPDATE` with neither a filter nor `सर्वत्र` is an error:\n\n```ssql\nपुस्तकेषु सर्वत्र मूल्यम् ६० इति परिवर्त्यताम् ।\n```\n\n### 3. `DELETE FROM` (`निष्कास्यताम्`)\nPlace the source table in the **Ablative Plural** (`पुस्तकेभ्यः` = \"from books\"), filter with `इति नियमेन`, and end with `निष्कास्यताम् ।`:\n\n```ssql\nपुस्तकेभ्यः सङ्ख्या १०१ इत्यनया समा अस्ति इति नियमेन निष्कास्यताम् ।\n```\n\nA `DELETE` always says what it removes. To empty a table, say so explicitly with `सर्वम्` (\"let everything be removed from the books\"); a `DELETE` with neither a filter nor `सर्वम्` is an error, so a forgotten filter can never empty a table:\n\n```ssql\nपुस्तकेभ्यः सर्वम् निष्कास्यताम् ।\n```\n\n## Key Principles\n\n1. **Graphemic Purity**: Only Devanagari script in .सं files\n2. **Grammar-Driven**: Vibhakti determines SQL semantics\n3. **Compilation**: SSQL → SQL at build time, not runtime\n4. **Type Safety**: Column types declared in the schema DDL enable compile-time checks\n\n## Next Steps\n\n- [Chapter 2: SELECT Basics](02-select-basics.md) - Columns, aliases, and expressions\n",
+      "exercise": {
+        "title": "Exercise 1: Your First SSQL Query (एकवचनम्)",
+        "prompt": "From the `पुस्तकानि` (`पुस्तकेभ्यः`) table in the University Bookstore, fetch 1 column: `शीर्षकम्` (`title`). Remember to use the singular verb `आह्रियताम्` and end with `।`.",
+        "project_id": "university_bookstore/SAMSQL",
+        "starter_ssql": "पुस्तकेभ्यः ",
+        "hint": "Write `शीर्षकम् आह्रियताम् ।` after `पुस्तकेभ्यः` — 1 projected column requires the singular Karmaṇi Loṭ verb `आह्रियताम्`.",
+        "solution_ssql": "पुस्तकेभ्यः शीर्षकम् आह्रियताम् ।",
+        "expected_columns": [
+          "title"
+        ],
+        "expected_min_rows": 5
+      }
+    },
+    {
+      "id": "track-a-02",
+      "track_id": "track-a",
+      "track_title": "Track A: SSQL for SQL Developers",
+      "filename": "02-select-basics.md",
+      "title": "Chapter 2: SELECT Basics",
+      "markdown": "# Chapter 2: SELECT Basics\n\n## Selecting Columns\n\nIn SQL, you list columns after SELECT. In SSQL, columns appear in **प्रथमा विभक्ति** (nominative case).\n\n**SQL:**\n```sql\nSELECT title, price FROM books;\n```\n\n**SSQL:**\n```ssql\nपुस्तकेभ्यः शीर्षकम् च मूल्यम् च आह्रियेताम् ।\n```\n\n### Multiple Columns with च (and)\n\nUse `च` after each column to list multiple columns, matching the verb number (`आह्रियताम्` for 1 column, `आह्रियेताम्` for 2 columns, `आह्रियन्ताम्` for 3 or more):\n\n```ssql\nपुस्तकेभ्यः \n    शीर्षकम् च \n    मूल्यम् च \n    भाषा च \nआह्रियन्ताम् ।\n```\n\nCompiles to:\n```sql\nSELECT title, price, language FROM books;\n```\n\n## Column Aliases\n\nUse `इति` to create aliases:\n\n**SQL:**\n```sql\nSELECT title AS book_title FROM books;\n```\n\n**SSQL:**\n```ssql\nपुस्तकेभ्यः शीर्षकम् पुस्तकशीर्षकम् इति आख्या आह्रियताम् ।\n```\n\nThe pattern is: `<expression> <alias> इति आख्या`\n\n## Expressions\n\n### Arithmetic\n\nUse Sanskrit mathematical constructs with `च` (using dual `इत्यनयोः` for 2 operands or plural `इत्येषाम्` for 3+ operands), Ablative (`पञ्चमी`, `-आत्`) + `विशोध्य अवशिष्टम्` for subtraction, and Instrumental (`तृतीया`) + `विभज्य लब्धम्` for division:\n\n| Operation | Sanskrit Pattern | Example |\n|-----------|------------------|---------|\n| Addition (`+`) | `<A> च <B> च इत्यनयोः योगः` | `मूल्यम् च १० च इत्यनयोः योगः` |\n| Subtraction (`-`) | `<MinuendAblative> <Subtrahend> विशोध्य अवशिष्टम्` | `मूल्यात् ५ विशोध्य अवशिष्टम्` |\n| Multiplication (`*`) | `<A> च <B> च इत्यनयोः गुणनम्` | `मूल्यम् च २ च इत्यनयोः गुणनम्` |\n| Division (`/`) | `<Dividend> <DivisorInstrumental> विभज्य लब्धम्` | `सकलमूल्यम् परिमाणेन विभज्य लब्धम्` |\n\n**Example (Multiple Arithmetic Projections):**\n```ssql\nपुस्तकेभ्यः\n    शीर्षकम् च\n    मूल्यम् च २ च इत्यनयोः गुणनम् द्विगुणमूल्यम् इति आख्या च\n    मूल्यात् ५ विशोध्य अवशिष्टम् न्यूनमूल्यम् इति आख्या च\nआह्रियन्ताम् ।\n```\n\nCompiles to:\n```sql\nSELECT\n    t1.title,\n    t1.price * 2 AS द्विगुणमूल्यम्,\n    t1.price - 5 AS न्यूनमूल्यम्\nFROM\n    books t1;\n```\n\n## String Constants\n\nUse quoted strings (Devanagari or Latin):\n\n**SSQL:**\n```ssql\nपुस्तकेभ्यः \n    भाषा \"Sanskrit\" इत्यनया समा अस्ति इति नियमेन \n    शीर्षकम् \nआह्रियताम् ।\n```\n\nCompiles to:\n```sql\nSELECT title FROM books WHERE language = 'Sanskrit';\n```\n\n## SELECT DISTINCT\n\nWrite `पुनरुक्तिम् विना` (\"without repetition\") just before the select list.\nIt removes repeated rows, whatever the columns and their genders:\n\n```ssql\nपुस्तकेभ्यः\n    पुनरुक्तिम् विना भाषा\nआह्रियताम् ।\n```\n\nCompiles to:\n```sql\nSELECT DISTINCT language FROM books;\n```\n\n## Next Steps\n\n- [Chapter 3: WHERE and Conditions](03-where-conditions.md)\n\n",
+      "exercise": {
+        "title": "Exercise 2: Multi-Column SELECT & Aliasing (प्रथमा + इति)",
+        "prompt": "From `पुस्तकानि` (`पुस्तकेभ्यः`), select 2 columns connected with `च`: `शीर्षकम्` and `मूल्यम्` aliased as `पुस्तकमूल्यम्` (`मूल्यम् पुस्तकमूल्यम् इति आख्या`). Because 2 columns are selected, finish with the dual verb `आह्रियेताम् ।`.",
+        "project_id": "university_bookstore/SAMSQL",
+        "starter_ssql": "पुस्तकेभ्यः\n    शीर्षकम् च\n    ",
+        "hint": "Add `मूल्यम् पुस्तकमूल्यम् इति आख्या च आह्रियेताम् ।` to complete the 2-column aliased projection.",
+        "solution_ssql": "पुस्तकेभ्यः शीर्षकम् च मूल्यम् पुस्तकमूल्यम् इति आख्या च आह्रियेताम् ।",
+        "expected_columns": [
+          "title",
+          "पुस्तकमूल्यम्"
+        ],
+        "expected_min_rows": 5
+      }
+    },
+    {
+      "id": "track-a-03",
+      "track_id": "track-a",
+      "track_title": "Track A: SSQL for SQL Developers",
+      "filename": "03-where-conditions.md",
+      "title": "Chapter 3: WHERE and Conditions",
+      "markdown": "# Chapter 3: WHERE and Conditions\n\n## Basic WHERE Clause\n\nIn SSQL, conditions use the pattern: `condition इति नियमेन`\n\n**SQL:**\n```sql\nSELECT * FROM books WHERE price > 50;\n```\n\n**SSQL:**\n```ssql\nपुस्तकेभ्यः \n    मूल्यम् ५० इत्यस्मात् अधिकम् अस्ति इति नियमेन \n    सर्वम्\nआह्रियताम् ।\n```\n\n## Comparison Operators\n\n| Operator | Pattern | Example |\n|----------|---------|---------|\n| = | `X Y इत्यनेन समम् अस्ति` | `भाषा \"English\" इत्यनया समा अस्ति` |\n| != | `X Y इत्यनेन समम् नास्ति` | `भाषा \"Hindi\" इत्यनया समा नास्ति` |\n| > | `X Y इत्यस्मात् अधिकम् अस्ति` | `मूल्यम् १०० इत्यस्मात् अधिकम् अस्ति` |\n| < | `X Y इत्यस्मात् न्यूनम् अस्ति` | `मूल्यम् ५० इत्यस्मात् न्यूनम् अस्ति` |\n| LIKE | `X Y इत्यनेन सदृशम् अस्ति` | `नाम \"%कालि%\" इत्यनेन सदृशम् अस्ति` |\n\n## Logical Operators\n\n### AND (च)\n\n```ssql\nपुस्तकेभ्यः\n    मूल्यम् ५० इत्यस्मात् अधिकम् अस्ति च\n    भाषा \"Sanskrit\" इत्यनया समा अस्ति च\n    इति नियमेन\n    सर्वम्\nआह्रियताम् ।\n```\n\n**SQL:**\n```sql\nSELECT * FROM books WHERE price > 50 AND language = 'Sanskrit';\n```\n\n### OR (वा)\n\n```ssql\nपुस्तकेभ्यः\n    भाषा \"English\" इत्यनया समा अस्ति वा\n    भाषा \"Hindi\" इत्यनया समा अस्ति वा\n    इति नियमेन\n    सर्वम्\nआह्रियताम् ।\n```\n\n**SQL:**\n```sql\nSELECT * FROM books WHERE language = 'English' OR language = 'Hindi';\n```\n\n### Grouping Compound Conditions Without Parentheses (`यत् ... इति`)\n\nBecause SSQL avoids ASCII punctuation such as `( )`, nested boolean expressions like `WHERE (A OR B) AND C` are grouped using the classical Sanskrit relative-quotative frame **`यत् ... इति`**:\n\n```ssql\nपुस्तकेभ्यः\n    यत् भाषा \"Sanskrit\" इत्यनया समा अस्ति वा भाषा \"Hindi\" इत्यनया समा अस्ति वा इति च\n    मूल्यम् १०० इत्यस्मात् न्यूनम् अस्ति च\n    इति नियमेन\n    शीर्षकम् च भाषा च मूल्यम् च\nआह्रियन्ताम् ।\n```\n\n**SQL:**\n```sql\nSELECT\n    t1.title,\n    t1.language,\n    t1.price\nFROM\n    books t1\nWHERE\n    ((t1.language = 'Sanskrit' OR t1.language = 'Hindi') AND t1.price < 100);\n```\n\n## NULL Checks\n\n| SQL | SSQL |\n|-----|------|\n| IS NULL | `रिक्तम् अस्ति` (neuter) / `रिक्ता अस्ति` (feminine) / `रिक्तः अस्ति` (masculine) |\n| IS NOT NULL | `रिक्तम् नास्ति` |\n\n**Example:**\n```ssql\nविक्रयाधिकारिभ्यः\n    प्रबन्धकसङ्ख्या रिक्ता अस्ति इति नियमेन\n    नाम\nआह्रियताम् ।\n```\n\n**SQL:**\n```sql\nSELECT name FROM sales_reps WHERE manager_id IS NULL;\n```\n\n## LIKE with Devanagari Strings\n\nSSQL supports Devanagari string constants:\n\n```ssql\nलेखकेभ्यः\n    नाम \"कालि%\" इत्यनेन सदृशम् अस्ति इति नियमेन\n    नाम\nआह्रियताम् ।\n```\n\n**SQL:**\n```sql\nSELECT name FROM authors WHERE name LIKE 'कालि%';\n```\n\n`सदृशम्` ignores the case of ASCII letters on both databases: it compiles to `LIKE` on SQLite and `ILIKE` on PostgreSQL.\n\n## Next Steps\n\n- [Chapter 4: JOINs](04-joins.md)\n",
+      "exercise": {
+        "title": "Exercise 3: Filtering Rows with WHERE (इति नियमेन)",
+        "prompt": "From `पुस्तकानि` (`पुस्तकेभ्यः`), filter where `मूल्यम्` (neuter singular) is less than (`न्यूनम्`) `२०` (`मूल्यम् २० इत्यस्मात् न्यूनम् अस्ति इति नियमेन`), and fetch 2 columns: `शीर्षकम्` and `मूल्यम्`.",
+        "project_id": "university_bookstore/SAMSQL",
+        "starter_ssql": "पुस्तकेभ्यः\n    ",
+        "hint": "Write the filter `मूल्यम् २० इत्यस्मात् न्यूनम् अस्ति इति नियमेन`, followed by `शीर्षकम् च मूल्यम् च आह्रियेताम् ।`.",
+        "solution_ssql": "पुस्तकेभ्यः मूल्यम् २० इत्यस्मात् न्यूनम् अस्ति इति नियमेन शीर्षकम् च मूल्यम् च आह्रियेताम् ।",
+        "expected_columns": [
+          "title",
+          "price"
+        ],
+        "expected_min_rows": 1
+      }
+    },
+    {
+      "id": "track-a-04",
+      "track_id": "track-a",
+      "track_title": "Track A: SSQL for SQL Developers",
+      "filename": "04-joins.md",
+      "title": "Chapter 4: JOINs",
+      "markdown": "# Chapter 4: JOINs\n\n## Basic JOIN Syntax\n\nJOINs in SSQL use `सह` (with) and तृतीया विभक्ति (instrumental case).\n\n**SQL:**\n```sql\nSELECT books.title, authors.name \nFROM books \nJOIN authors ON books.author_id = authors.id;\n```\n\n**SSQL:**\n```ssql\nपुस्तकेभ्यः\n    लेखकैः सह पुस्तकस्य लेखकसङ्ख्या लेखकस्य सङ्ख्या इत्यनया समा अस्ति इति मेलनेन\n    पुस्तकस्य शीर्षकम् च लेखकस्य नाम च \nआह्रियेताम् ।\n```\n\n> [!TIP]\n> **Table Qualification (`षष्ठी विभक्तिः`, singular):**\n> A column is qualified by its table stem in the **genitive singular**: `पुस्तकस्य शीर्षकम्`, \"the book's title\". Each row has one title, so the owner is one book. The plural `पुस्तकानाम् शीर्षकम्` is rejected.\n\n## JOIN Types\n\n### INNER JOIN (default)\n\n```ssql\nपुस्तकेभ्यः\n    लेखकैः सह पुस्तकस्य लेखकसङ्ख्या लेखकस्य सङ्ख्या इत्यनया समा अस्ति इति मेलनेन\n    पुस्तकस्य शीर्षकम् च लेखकस्य नाम च\nआह्रियेताम् ।\n```\n\n### LEFT JOIN (वाममेलनेन)\n\n```ssql\nपुस्तकेभ्यः\n    लेखकैः सह पुस्तकस्य लेखकसङ्ख्या लेखकस्य सङ्ख्या इत्यनया समा अस्ति इति वाममेलनेन\n    पुस्तकस्य शीर्षकम् च लेखकस्य नाम च\nआह्रियेताम् ।\n```\n\n**SQL:**\n```sql\nSELECT books.title, authors.name FROM books LEFT JOIN authors ON books.author_id = authors.id;\n```\n\n### Self-Joins with CTEs (`आख्या`)\n\nBecause SSQL qualifies columns using the genitive case (षष्ठी विभक्तिः) of the table stem rather than dot-notation, self-joins define a named CTE (`आख्या`) for the second role (e.g., `वरिष्ठ`, \"senior\", for the manager):\n\n**SQL:**\n```sql\nWITH managers AS (SELECT id, name FROM sales_reps)\nSELECT r.name, m.name \nFROM sales_reps r \nJOIN managers m ON r.manager_id = m.id;\n```\n\n**SSQL:**\n```ssql\nवरिष्ठः इति आख्या वरिष्ठ इति पुंलिङ्गम् एकवचनम्\n    विक्रयाधिकारिभ्यः सङ्ख्या च नाम च आह्रियेताम् ।\n\nविक्रयाधिकारिभ्यः\n    वरिष्ठेन सह विक्रयाधिकारिणः प्रबन्धकसङ्ख्या वरिष्ठस्य सङ्ख्या इत्यनया समा अस्ति इति मेलनेन\n    विक्रयाधिकारिणः नाम च वरिष्ठस्य नाम च\nआह्रियेताम् ।\n```\n\n## Multiple JOINs\n\nChain multiple JOIN clauses:\n\n```ssql\nविक्रयणेभ्यः\n    ग्राहकैः सह विक्रयणस्य ग्राहकसङ्ख्या ग्राहकस्य सङ्ख्या इत्यनया समा अस्ति इति मेलनेन\n    आपणैः सह विक्रयणस्य आपणसङ्ख्या आपणस्य सङ्ख्या इत्यनया समा अस्ति इति मेलनेन\n    ग्राहकस्य नाम च आपणस्य नाम च विक्रयणस्य सकलमूल्यम् च\nआह्रियन्ताम् ।\n```\n\n**SQL:**\n```sql\nSELECT c.name, s.name, sales.total_amount\nFROM sales\nJOIN customers c ON sales.customer_id = c.id\nJOIN stores s ON sales.store_id = s.id;\n```\n\n## Combining JOIN (`इति मेलनेन`) with WHERE (`इति नियमेन`)\n\nWhen a query combines a `JOIN` with a `WHERE` filter, place the `JOIN` clause (`... इति मेलनेन`) after the source table (`पञ्चमी`), followed by the `WHERE` clause (`... इति नियमेन`), followed by the projected columns:\n\n```ssql\nपुस्तकेभ्यः\n    लेखकैः सह पुस्तकस्य लेखकसङ्ख्या लेखकस्य सङ्ख्या इत्यनया समा अस्ति इति मेलनेन\n    पुस्तकस्य मूल्यम् २५ इत्यस्मात् अधिकम् अस्ति इति नियमेन\n    पुस्तकस्य शीर्षकम् च लेखकस्य नाम च पुस्तकस्य मूल्यम् च\nआह्रियन्ताम् ।\n```\n\n**SQL:**\n```sql\nSELECT\n    t1.title,\n    t2.name,\n    t1.price\nFROM\n    books t1\nJOIN authors t2 ON t1.author_id = t2.id\nWHERE\n    t1.price > 25;\n```\n\n## Next Steps\n\n- [Chapter 5: Aggregates and GROUP BY](05-aggregates.md)\n\n",
+      "exercise": {
+        "title": "Exercise 4: Multi-Table INNER JOIN (सह ... इति मेलनेन)",
+        "prompt": "From `विक्रयणानि` (`विक्रयणेभ्यः`), join with `आपणाः` (`आपणैः सह`) where `विक्रयणस्य आपणसङ्ख्या` equals `आपणस्य सङ्ख्या` (`इत्यनया समा अस्ति इति मेलनेन`), and fetch 2 columns: `आपणस्य नाम` and `विक्रयणस्य सकलमूल्यम्`.",
+        "project_id": "university_bookstore/SAMSQL",
+        "starter_ssql": "विक्रयणेभ्यः\n    आपणैः सह ",
+        "hint": "Because `सङ्ख्या` is feminine, the join condition is `विक्रयणस्य आपणसङ्ख्या आपणस्य सङ्ख्या इत्यनया समा अस्ति इति मेलनेन`, followed by `आपणस्य नाम च विक्रयणस्य सकलमूल्यम् च आह्रियेताम् ।`.",
+        "solution_ssql": "विक्रयणेभ्यः आपणैः सह विक्रयणस्य आपणसङ्ख्या आपणस्य सङ्ख्या इत्यनया समा अस्ति इति मेलनेन आपणस्य नाम च विक्रयणस्य सकलमूल्यम् च आह्रियेताम् ।",
+        "expected_columns": [
+          "name",
+          "total_amount"
+        ],
+        "expected_min_rows": 5
+      }
+    },
+    {
+      "id": "track-a-05",
+      "track_id": "track-a",
+      "track_title": "Track A: SSQL for SQL Developers",
+      "filename": "05-aggregates.md",
+      "title": "Chapter 5: Aggregates and GROUP BY",
+      "markdown": "# Chapter 5: Aggregates and GROUP BY\n\n## Aggregate Functions\n\nSSQL supports standard SQL aggregate functions using Sanskrit nouns. When comparing an aggregate in a `HAVING` (`इति समूहनियमेन`) clause, the predicate adjective (`अधिकः`/`अधिका`/`अधिकम्`, `न्यूनः`/`न्यूना`/`न्यूनम्`, `समः`/`समा`/`समम्`) agrees with the **grammatical gender of the aggregate noun itself** (not the inner column):\n\n| Function | Sanskrit | Gender (`लिङ्गम्`) | Predicate Agreement (`HAVING`) | Pattern |\n|----------|----------|-------------------|--------------------------------|---------|\n| SUM | `योगः` | पुंलिङ्गम् (Masculine) | `अधिकः` / `न्यूनः` / `समः` | `मूल्यस्य योगः` (an alias: `<alias> इत्यस्य योगः`) |\n| AVG | `माध्यम्` | नपुंसकलिङ्गम् (Neuter) | `अधिकम्` / `न्यूनम्` / `समम्` | `मूल्यस्य माध्यम्` (an alias: `<alias> इत्यस्य माध्यम्`) |\n| COUNT | `गणना` | स्त्रीलिङ्गम् (Feminine) | `अधिका` / `न्यूना` / `समा` | `सङ्ख्यायाः गणना` (or `पङ्क्तीनाम् गणना`, \"the count of rows\", for `COUNT(*)`) |\n| MAX | `महत्तमम्` | नपुंसकलिङ्गम् (Neuter) | `अधिकम्` / `न्यूनम्` / `समम्` | `मूल्यस्य महत्तमम्` (an alias: `<alias> इत्यस्य महत्तमम्`) |\n| MIN | `लघुतमम्` | नपुंसकलिङ्गम् (Neuter) | `अधिकम्` / `न्यूनम्` / `समम्` | `मूल्यस्य लघुतमम्` (an alias: `<alias> इत्यस्य लघुतमम्`) |\n\n## Basic Aggregation\n\n**SQL:**\n```sql\nSELECT SUM(total_amount) FROM sales;\n```\n\n**SSQL:**\n```ssql\nविक्रयणेभ्यः सकलमूल्यस्य योगः आह्रियताम् ।\n```\n\n## GROUP BY (समूहेन)\n\nUse `समूहेन` (by group) to mark GROUP BY columns:\n\n**SQL:**\n```sql\nSELECT language, AVG(price) \nFROM books \nGROUP BY language;\n```\n\n**SSQL:**\n```ssql\nपुस्तकेभ्यः \n    भाषा इति समूहेन \n    भाषा च मूल्यस्य माध्यम् माध्यमूल्यम् इति आख्या च \nआह्रियेताम् ।\n```\n\n## HAVING (Group Conditions)\n\nHAVING conditions come after GROUP BY, using the `इति समूहनियमेन` marker:\n\n**SQL:**\n```sql\nSELECT language, COUNT(*) as book_count\nFROM books \nGROUP BY language\nHAVING COUNT(*) > 2;\n```\n\n**SSQL:**\n```ssql\nपुस्तकेभ्यः\n    भाषा इति समूहेन\n    सङ्ख्यायाः गणना २ इत्यस्याः अधिका अस्ति इति समूहनियमेन\n    भाषा च सङ्ख्यायाः गणना पुस्तकगणना इति आख्या च\nआह्रियेताम् ।\n```\n\n## ORDER BY (क्रमेण)\n\n**SQL:**\n```sql\nSELECT name, SUM(total_amount) as revenue\nFROM sales_reps \nJOIN sales ON sales_reps.id = sales.sales_rep_id\nGROUP BY name\nORDER BY revenue DESC NULLS LAST;\n```\n\n**SSQL:**\n```ssql\nविक्रयाधिकारिभ्यः\n    विक्रयणैः सह विक्रयाधिकारिणः सङ्ख्या विक्रयणस्य विक्रयाधिकारिसङ्ख्या इत्यनया समा अस्ति इति मेलनेन\n    विक्रयाधिकारिणः नाम इति समूहेन\n    विक्रयणस्य सकलमूल्यस्य योगः अवरोहः इति क्रमेण\n    विक्रयाधिकारिणः नाम च विक्रयणस्य सकलमूल्यस्य योगः राजस्वम् इति आख्या च\nआह्रियेताम् ।\n```\n\n## Type Safety\n\nThe compiler checks aggregate type compatibility:\n\n- ✅ `SUM(price)` — numeric column, valid\n- ❌ `SUM(name)` — text column, compile error (`योगः` and `माध्यम्` are of numbers; `गणना`, `महत्तमम्` and `लघुतमम्` take any column)\n\nThis is configured via each column's declared type in the schema DDL:\n\n```ssql\nपुस्तकानि इति पटलम् \"books\" इति आख्या पुस्तक इति नपुंसकलिङ्गम् बहुवचनम् रच्यताम् यत्र\n    मूल्यम् इति वास्तविकः \"price\" इति आख्या मूल्य इति नपुंसकलिङ्गम् एकवचनम् च  // SUM OK\n    शीर्षकम् इति वाक्यम् \"title\" इति आख्या शीर्षक इति नपुंसकलिङ्गम् एकवचनम् च     // SUM ERROR\n  इति पटलम् ।\n```\n\n## Complete Example\n\n**Calculate commission for sales reps:**\n\n```ssql\nविक्रयाधिकारिभ्यः\n    विक्रयणैः सह विक्रयाधिकारिणः सङ्ख्या विक्रयणस्य विक्रयाधिकारिसङ्ख्या इत्यनया समा अस्ति इति मेलनेन\n    विक्रयाधिकारिणः नाम इति समूहेन\n    विक्रयणस्य सकलमूल्यस्य योगः अवरोहः इति क्रमेण\n    विक्रयाधिकारिणः नाम च \n    विक्रयणस्य सकलमूल्यस्य योगः सकलराजस्वम् इति आख्या च\n    यत् विक्रयणस्य सकलमूल्यस्य योगः इति च ०.१ च इत्यनयोः गुणनम् लाभांशः इति आख्या च\nआह्रियन्ताम् ।\n```\n\n**Generated SQL:**\n```sql\nSELECT\n    t1.name,\n    SUM(t2.total_amount) AS सकलराजस्वम्,\n    SUM(t2.total_amount) * 0.1 AS लाभांशः\nFROM\n    sales_reps t1\nJOIN sales t2 ON t1.id = t2.sales_rep_id\nGROUP BY t1.name\nORDER BY SUM(t2.total_amount) DESC NULLS LAST;\n```\n\n## Next Steps\n\n- [Chapter 6: Window Functions and CTEs](06-window-functions-and-ctes.md)\n\n",
+      "exercise": {
+        "title": "Exercise 5: Grouping & Aggregation (GROUP BY + COUNT)",
+        "prompt": "From `पुस्तकानि` (`पुस्तकेभ्यः`), grouped by `भाषा` (`भाषा इति समूहेन`), fetch 2 columns: `भाषा` and the count (`गणना`) of `सङ्ख्या` (`सङ्ख्यायाः गणना`) aliased as `पुस्तकगणना`.",
+        "project_id": "university_bookstore/SAMSQL",
+        "starter_ssql": "पुस्तकेभ्यः\n    भाषा इति समूहेन\n    ",
+        "hint": "Project `भाषा च सङ्ख्यायाः गणना पुस्तकगणना इति आख्या च आह्रियेताम् ।`.",
+        "solution_ssql": "पुस्तकेभ्यः भाषा इति समूहेन भाषा च सङ्ख्यायाः गणना पुस्तकगणना इति आख्या च आह्रियेताम् ।",
+        "expected_columns": [
+          "language",
+          "पुस्तकगणना"
+        ],
+        "expected_min_rows": 1
+      }
+    },
+    {
+      "id": "track-a-06",
+      "track_id": "track-a",
+      "track_title": "Track A: SSQL for SQL Developers",
+      "filename": "06-window-functions-and-ctes.md",
+      "title": "Chapter 6: Window Functions and CTEs",
+      "markdown": "# Chapter 6: Window Functions and CTEs\n\n## Window Functions (`श्रेणी`)\n\nSSQL expresses SQL `OVER (PARTITION BY ... ORDER BY ...)` with a `यत्र` clause after the window function: `<keys> आधारेण विभाजनम्` (PARTITION BY) and `<keys> अनुसारम् आरोहक्रमेण / अवरोहक्रमेण` (ORDER BY), in either order, then an optional frame.\n\n| SQL Window Function | SSQL Form | Meaning |\n|---------------------|-----------|---------|\n| `RANK() OVER (...)` | `श्रेणी यत्र ...` | Rank within the window |\n| `DENSE_RANK() OVER (...)` | `सघनश्रेणी यत्र ...` | Rank without gaps |\n| `ROW_NUMBER() OVER (...)` | `पङ्क्तिसङ्ख्या यत्र ...` | Row number |\n| `NTILE(4) OVER (...)` | `चतुर्थांशाङ्कः यत्र ...` | Quartile number |\n| `NTILE(n) OVER (...)` | `<n> भागेषु भागाङ्कः यत्र ...` (two parts: `२ भागयोः भागाङ्कः`) | Part number among n parts |\n| `LAG(col) OVER (...)` | `पूर्वपङ्क्तेः <col> यत्र ...` | The previous row's value |\n| `LEAD(col) OVER (...)` | `अनन्तरपङ्क्तेः <col> यत्र ...` | The next row's value |\n| `AVG(col) OVER (...)` | `<col-genitive> माध्यम् यत्र ...` | Windowed average (likewise `योगः`, `गणना`, `महत्तमम्`, `लघुतमम्`) |\n\n> [!TIP]\n> **Keys are in the genitive.** `आधारेण` (\"on the basis of\") and `अनुसारम्` (\"according to\") govern the genitive: `भाषायाः आधारेण विभाजनम्`, `मूल्यस्य अनुसारम् अवरोहक्रमेण`. An aggregate key declines its own noun (`मूल्यस्य योगस्य अनुसारम्`, `… इत्यस्य गणनायाः अनुसारम्`); only a name with no declared stem (an alias produced by an earlier CTE) takes the genitive pronoun: `समीक्षाश्रेणीमाध्यम् इत्यस्य अनुसारम्`.\n>\n> **Every ordering states its direction** (`आरोहक्रमेण` or `अवरोहक्रमेण`). Each part of the window therefore ends in its own marker word, so the alias follows directly: `श्रेणी यत्र … अवरोहक्रमेण मूल्यश्रेणी इति आख्या`.\n\n### Example: Ranking Books by Price Within Each Language\n\n**SQL:**\n```sql\nSELECT\n    title,\n    language,\n    price,\n    RANK() OVER (PARTITION BY language ORDER BY price DESC NULLS LAST) AS price_rank\nFROM books;\n```\n\n**SSQL:**\n```ssql\nपुस्तकेभ्यः\n    शीर्षकम् च\n    भाषा च\n    मूल्यम् च\n    श्रेणी यत्र भाषायाः आधारेण विभाजनम् मूल्यस्य अनुसारम् अवरोहक्रमेण मूल्यश्रेणी इति आख्या च\nआह्रियन्ताम् ।\n```\n\n### Example: Windowed Aggregate (`AVG(...) OVER (PARTITION BY ...)`)\n\nEach book is shown beside the average price of its genre. A window with no ordering covers its whole partition; an ordering would make it a running average, up to the current row.\n\n**SQL:**\n```sql\nSELECT\n    title,\n    genre,\n    price,\n    AVG(price) OVER (PARTITION BY genre) AS विधामाध्यम्\nFROM books;\n```\n\n**SSQL:**\n```ssql\nपुस्तकेभ्यः\n    शीर्षकम् च\n    विधा च\n    मूल्यम् च\n    मूल्यस्य माध्यम् यत्र विधायाः आधारेण विभाजनम् विधामाध्यम् इति आख्या च\nआह्रियन्ताम् ।\n```\n\n### Example: Comparing Consecutive Sales Using `पूर्वपङ्क्तेः` (`LAG`)\n\n**SQL:**\n```sql\nSELECT\n    sale_date,\n    total_amount,\n    LAG(total_amount) OVER (PARTITION BY store_id ORDER BY sale_date ASC) AS prev_amount\nFROM sales;\n```\n\n**SSQL:**\n```ssql\nविक्रयणेभ्यः\n    विक्रयणदिनाङ्कः च\n    सकलमूल्यम् च\n    पूर्वपङ्क्तेः सकलमूल्यम् यत्र आपणसङ्ख्यायाः आधारेण विभाजनम् विक्रयणदिनाङ्कस्य अनुसारम् आरोहक्रमेण पूर्वमूल्यम् इति आख्या च\nआह्रियन्ताम् ।\n```\n\n## Common Table Expressions (`इति आख्या ...`)\n\nTemporary named result sets (`WITH cte AS (...)`) are declared by binding the CTE's nominative name, stem, gender, and number with `इति आख्या <stem> इति <gender> <vachana>` before its query body (either directly or wrapped in `सञ्ज्ञा यत् <query> इति ।`).\n\nWhen querying from a CTE declared as a singular summary noun (`एकवचनम्`), it is read in the **Ablative Singular (`पञ्चमी एकवचनम्`, `-आत्`)**, agreeing with its declared number:\n\n**SQL:**\n```sql\nWITH पुस्तकविक्रयणसार AS (\n    SELECT\n        SUM(quantity) AS सकलविक्रयणम्,\n        book_id\n    FROM sale_items\n    GROUP BY book_id\n)\nSELECT book_id, सकलविक्रयणम्\nFROM पुस्तकविक्रयणसार;\n```\n\n**SSQL:**\n```ssql\nपुस्तकविक्रयणसारः इति आख्या पुस्तकविक्रयणसार इति पुंलिङ्गम् एकवचनम् विक्रयणवस्तुभ्यः\n    पुस्तकसङ्ख्या इति समूहेन\n    परिमाणस्य योगः सकलविक्रयणम् इति आख्या च\n    पुस्तकसङ्ख्या च\nआह्रियेताम् ।\n\nपुस्तकविक्रयणसारात्\n    पुस्तकसङ्ख्या च\n    सकलविक्रयणम् च\nआह्रियेताम् ।\n```\n\n## Next Steps\n\n- [Chapter 7: Pure User-Defined Functions & Tooling](07-pure-functions-and-transpiler.md)\n",
+      "exercise": {
+        "title": "Exercise 6: Window Function Ranking (OVER PARTITION BY)",
+        "prompt": "From `पुस्तकानि` (`पुस्तकेभ्यः`), fetch 4 columns: `शीर्षकम्`, `भाषा`, `मूल्यम्`, and `RANK() OVER (PARTITION BY language ORDER BY price DESC)` (`श्रेणी यत्र भाषायाः आधारेण विभाजनम् मूल्यस्य अनुसारम् अवरोहक्रमेण`) aliased as `मूल्यश्रेणी`.",
+        "project_id": "university_bookstore/SAMSQL",
+        "starter_ssql": "पुस्तकेभ्यः\n    शीर्षकम् च\n    भाषा च\n    मूल्यम् च\n    ",
+        "hint": "Add `श्रेणी यत्र भाषायाः आधारेण विभाजनम् मूल्यस्य अनुसारम् अवरोहक्रमेण मूल्यश्रेणी इति आख्या च आह्रियन्ताम् ।` (plural verb for 4 columns).",
+        "solution_ssql": "पुस्तकेभ्यः शीर्षकम् च भाषा च मूल्यम् च श्रेणी यत्र भाषायाः आधारेण विभाजनम् मूल्यस्य अनुसारम् अवरोहक्रमेण मूल्यश्रेणी इति आख्या च आह्रियन्ताम् ।",
+        "expected_columns": [
+          "title",
+          "language",
+          "price",
+          "मूल्यश्रेणी"
+        ],
+        "expected_min_rows": 5
+      }
+    },
+    {
+      "id": "track-a-07",
+      "track_id": "track-a",
+      "track_title": "Track A: SSQL for SQL Developers",
+      "filename": "07-pure-functions-and-transpiler.md",
+      "title": "Chapter 7: Pure User-Defined Functions & Tooling",
+      "markdown": "# Chapter 7: Pure User-Defined Functions & Tooling\n\n## Pure User-Defined Functions (`शुद्धम् कार्यम्`)\n\nSSQL supports native, side-effect-free User-Defined Functions (`शुद्धम् कार्यम्`) inspired by the *Sopānam* Sanskrit programming specification. Pure UDFs are expanded at compile time into standard SQL expressions across both SQLite and PostgreSQL.\n\n### Declaring a Pure UDF\n\nThe function is created with `रच्यताम्`, like every other object. Its return type is stated with `प्रतिदीयते` (\"is returned\"), its parameters with the passive `दीयते` (\"is given\"), which agrees in number (`वचन`) with the parameter count, and its result with `इति उत्तरम् प्रतिदीयताम्` (\"let the answer be returned\"):\n- **1 parameter (Ekavachana):** `दीयते` (\"is given\")\n- **2 parameters (Dvivachana):** `दीयेते` (\"both are given\")\n- **3+ parameters (Bahuvachana):** `दीयन्ते` (\"are given\")\n\nAt the call site the arguments are supplied with `प्रदाय` (\"having supplied\").\n\n```ssql\nद्विगुणितम् इति शुद्धम् कार्यम् रच्यताम् यत्र वास्तविकः प्रतिदीयते च\n    मूल्यम् इति वास्तविकः दीयते\n    मूल्यम् च २ च इत्यनयोः गुणनम् इति उत्तरम् प्रतिदीयताम्\nइति कार्यम् ।\n\nन्यूनीकृतम् इति शुद्धम् कार्यम् रच्यताम् यत्र वास्तविकः प्रतिदीयते च\n    मूल्यम् इति वास्तविकः च मूल्यह्रासः इति वास्तविकः च दीयेते\n    मूल्यात् मूल्यह्रासम् विशोध्य अवशिष्टम् इति उत्तरम् प्रतिदीयताम्\nइति कार्यम् ।\n\nपुस्तकेभ्यः\n    शीर्षकम् च\n    मूल्यस्य द्विगुणितम् द्विगुणितमूल्यम् इति आख्या च\n    मूल्यम् च १० च प्रदाय न्यूनीकृतम् न्यूनीकृतमूल्यम् इति आख्या च\nआह्रियन्ताम् ।\n```\n\n### Calling Conventions\n\n1. **Single-Argument Genitive (`षष्ठी`):**\n   - `मूल्यस्य द्विगुणितम्` (\"the doubled value of price\")\n   - `मूल्यम् प्रदाय द्विगुणितम्` (\"having supplied price, doubled\")\n2. **Multi-Argument Positional (`प्रदाय`):**\n   - `मूल्यम् च १० च प्रदाय न्यूनीकृतम्`\n3. **Multi-Argument Named (`प्रदाय <param> इत्यस्य मूल्यम् <val> इति`):**\n   - Allows arguments in any order with full Kāraka clarity.\n\n## Developer Tooling (`--from-sql`, `--fmt`, `--lint`)\n\n- **Reverse Transpiler (`--from-sql`):** Automatically translates existing `.sql` schemas and queries into strict-mode, Kāraka-concordant `.सं` files:\n  ```sql\n  -- ssql_compiler --from-sql legacy_queries.sql --schema schema.सं -o queries.सं\n  SELECT title, price FROM books WHERE price > 25 ORDER BY price DESC LIMIT 10;\n  ```\n- **Canonical Formatter (`--fmt`):** Formats `.सं` files in place with canonical DDL, UDF, and DQL indentation (`ssql_compiler --fmt query.सं`).\n- **Linguistic Purity Linter (`--lint`):** Flags ASCII numerals (`LINT-001`), legacy parentheses (`LINT-002`), word-final anusvāra instead of explicit halanta `म्` (`LINT-003`), and a missing daṇḍa `।` (`LINT-004`).\n\n## Next Steps\n\n- [Track B, Chapter 1: विभक्तिपरिचयः (Vibhakti Overview)](../samskrutam-through-ssql/01-vibhakti-overview.md)\n",
+      "exercise": {
+        "title": "Exercise 7: Pure User-Defined Function (शुद्धम् कार्यम् + प्रदाय)",
+        "prompt": "Complete the query below the `करसहितमूल्यम्` Pure UDF definition to fetch 2 columns from `पुस्तकेभ्यः`: `शीर्षकम्` and `मूल्यम् च ५ च प्रदाय करसहितमूल्यम्` aliased as `सकलमूल्यम्` (`… सकलमूल्यम् इति आख्या`).",
+        "project_id": "university_bookstore/SAMSQL",
+        "starter_ssql": "करसहितमूल्यम् इति शुद्धम् कार्यम् रच्यताम् यत्र वास्तविकः प्रतिदीयते च\n    मूल्यम् इति वास्तविकः च करः इति वास्तविकः च दीयेते\n    मूल्यम् च करः च इत्यनयोः योगः इति उत्तरम् प्रतिदीयताम्\nइति कार्यम् ।\n\nपुस्तकेभ्यः\n    शीर्षकम् च\n    ",
+        "hint": "Add `मूल्यम् च ५ च प्रदाय करसहितमूल्यम् सकलमूल्यम् इति आख्या च आह्रियेताम् ।`.",
+        "solution_ssql": "करसहितमूल्यम् इति शुद्धम् कार्यम् रच्यताम् यत्र वास्तविकः प्रतिदीयते च\n    मूल्यम् इति वास्तविकः च करः इति वास्तविकः च दीयेते\n    मूल्यम् च करः च इत्यनयोः योगः इति उत्तरम् प्रतिदीयताम्\nइति कार्यम् ।\n\nपुस्तकेभ्यः शीर्षकम् च मूल्यम् च ५ च प्रदाय करसहितमूल्यम् सकलमूल्यम् इति आख्या च आह्रियेताम् ।",
+        "expected_columns": [
+          "title",
+          "सकलमूल्यम्"
+        ],
+        "expected_min_rows": 5
+      }
+    },
+    {
+      "id": "track-b-01",
+      "track_id": "track-b",
+      "track_title": "Track B: Samskrutam Through SSQL",
+      "filename": "01-vibhakti-overview.md",
+      "title": "अध्याय १: विभक्तिपरिचयः",
+      "markdown": "# अध्याय १: विभक्तिपरिचयः\n\n## विभक्तिः किम्?\n\nसंस्कृतभाषायाम् **विभक्तिः** (Vibhakti) शब्दानाम् कार्यम् सूचयति।\nSSQL भाषायाम् विभक्तयः SQL क्रियासु प्रयुज्यन्ते।\n\n## सप्त विभक्तयः\n\n| विभक्तिः | कार्यम् | SQL सम्बन्धः |\n|---------|--------|-------------|\n| **प्रथमा** | उक्तम् कारकम् (कर्मणि प्रयोगे कर्म) | SELECT columns |\n| **द्वितीया** | कर्म | Direct objects |\n| **तृतीया** | करणम् | WHERE, GROUP BY, ORDER BY |\n| **चतुर्थी** | सम्प्रदानम् | GRANT TO (reserved; not yet parsed) |\n| **पञ्चमी** | अपादानम् | FROM (source) |\n| **षष्ठी** | सम्बन्धः | Property access |\n| **सप्तमी** | अधिकरणम् | INSERT INTO |\n\n## उदाहरणम्\n\n**SSQL:**\n```ssql\nग्राहकेभ्यः नाम आह्रियताम् ।\n```\n\n**विश्लेषणम्:**\n- `ग्राहकेभ्यः` = ग्राहक + भ्यस् (पञ्चमी बहुवचन; बहुवचने झल्येत् 7.3.103 makes the stem's अ into ए)\n  - \"ग्राहकेभ्यः\" → \"FROM customers\"\n- `नाम` = प्रथमा एकवचन\n  - \"नाम\" → \"SELECT name\"\n- `आह्रियताम्` = आ + √हृ + यक् + ताम् (लोट् कर्मणि; before यक्, ऋ becomes रि by रिङ् शयग्लिङ्क्षु 7.4.28: हृ → ह्रि)\n  - \"आह्रियताम्\" → \"fetch\" (passive imperative)\n\n**SQL:**\n```sql\nSELECT name FROM customers;\n```\n\n## पञ्चमी विभक्तिः (FROM)\n\nपञ्चमी **अपादानम्** (source/origin) सूचयति।\n\nSQL भाषायाः FROM खण्डः पञ्चम्या सूच्यते।\n\n| एकवचनम् | द्विवचनम् | बहुवचनम् |\n|---------|----------|---------|\n| आत् / आयाः | आभ्याम् | एभ्यः / आभ्यः |\n\n**उदाहरणानि:**\n- `पुस्तकात्` (from one book)\n- `पुस्तकाभ्याम्` (from two books)\n- `पुस्तकेभ्यः` (from many books)\n\n## तृतीया विभक्तिः (BY/WITH)\n\nतृतीया **करणम्** (instrument/means) सूचयति।\n\nSQL भाषायाः WHERE, GROUP BY, ORDER BY इति खण्डाः तृतीयया सूच्यन्ते।\n\n| प्रयोगः | उदाहरणम् | SQL |\n|--------|---------|-----|\n| नियमेन | नियमेन (by rule) | WHERE |\n| समूहेन | समूहेन (by group) | GROUP BY |\n| क्रमेण | क्रमेण (by order) | ORDER BY |\n\n## अग्रिमौ अध्यायौ\n\n- [अध्याय २: प्रथमाविभक्तिः वचनान्वयः च (Prathamā & Verb Number Concordance)](./02-prathama-and-vachana-concordance.md)\n- [अध्याय ३: लिङ्गविशेषणान्वयः (Gender & Adjective Concordance)](./03-linga-and-visheshana-concordance.md)\n",
+      "exercise": {
+        "title": "Exercise B1: पञ्चमी (FROM) & तृतीया (ORDER BY क्रमेण)",
+        "prompt": "From `ग्राहकाः` (Ablative plural: `ग्राहकेभ्यः`), ordered by `नाम` ascending (`नाम आरोहः इति क्रमेण`), fetch 1 column: `नाम` using the singular verb `आह्रियताम् ।`.",
+        "project_id": "university_bookstore/SAMSQL",
+        "starter_ssql": "ग्राहकेभ्यः\n    ",
+        "hint": "Write `नाम आरोहः इति क्रमेण नाम आह्रियताम् ।` after `ग्राहकेभ्यः`.",
+        "solution_ssql": "ग्राहकेभ्यः नाम आरोहः इति क्रमेण नाम आह्रियताम् ।",
+        "expected_columns": [
+          "name"
+        ],
+        "expected_min_rows": 3
+      }
+    },
+    {
+      "id": "track-b-02",
+      "track_id": "track-b",
+      "track_title": "Track B: Samskrutam Through SSQL",
+      "filename": "02-prathama-and-vachana-concordance.md",
+      "title": "अध्याय २: प्रथमाविभक्तिः वचनान्वयः च (Prathamā & Verb Number Concordance)",
+      "markdown": "# अध्याय २: प्रथमाविभक्तिः वचनान्वयः च (Prathamā & Verb Number Concordance)\n\n## कर्मणि प्रयोगे उक्तम् कर्म क्रिया च\n\nSSQL वाक्यानि **कर्मणि प्रयोगे** (passive voice) विरच्यन्ते। कर्मणि प्रयोगे कर्म **उक्तम्** (प्रथमायाम्), कर्ता अनुक्तः। यदा वयम् स्तम्भान् (columns) चिनुमः, तदा ते स्तम्भाः **प्रथमाविभक्तौ** (Nominative case) तिष्ठन्ति, क्रियापदम् च स्तम्भानाम् सङ्ख्यया (**वचनेन**) सह अन्वितम् भवति।\n\n| स्तम्भसङ्ख्या | वचनम् | क्रियापदम् (लोट् कर्मणि) | अर्थः |\n|---------------|-------|--------------------------|------|\n| १ (एकः स्तम्भः) | एकवचनम् | `आह्रियताम्` | Let it be fetched |\n| २ (द्वौ स्तम्भौ) | द्विवचनम् | `आह्रियेताम्` | Let the two be fetched |\n| ३+ (बहवः स्तम्भाः) | बहुवचनम् | `आह्रियन्ताम्` | Let them all be fetched |\n\n## १. एकवचनम् (`आह्रियताम्`)\n\nयदा केवलम् एकः स्तम्भः आह्रियते:\n\n```ssql\nपुस्तकेभ्यः शीर्षकम् आह्रियताम् ।\n```\n\n## २. द्विवचनम् (`आह्रियेताम्`)\n\nयदा द्वौ स्तम्भौ `च` शब्देन संयोज्येते, तदा द्विवचनक्रिया `आह्रियेताम्` प्रयुज्यते:\n\n```ssql\nपुस्तकेभ्यः शीर्षकम् च मूल्यम् च आह्रियेताम् ।\n```\n\n## ३. बहुवचनम् (`आह्रियन्ताम्`)\n\nयदा त्रयः ततोऽधिका वा स्तम्भाः आह्रियन्ते, तदा बहुवचनक्रिया `आह्रियन्ताम्` प्रयुज्यते:\n\n```ssql\nपुस्तकेभ्यः शीर्षकम् च मूल्यम् च प्रकाशनवर्षम् च आह्रियन्ताम् ।\n```\n\n## अग्रिमः अध्यायः\n\n- [अध्याय ३: लिङ्गविशेषणान्वयः (Gender & Adjective Concordance)](03-linga-and-visheshana-concordance.md)\n",
+      "exercise": {
+        "title": "Exercise B2: वचनान्वयः • Plural Verb Concordance (बहुवचनम्)",
+        "prompt": "From `आपणाः` (`आपणेभ्यः`), fetch 3 columns in `प्रथमा विभक्तिः`: `सङ्ख्या`, `नाम`, and `नगरम्` (each followed by `च`), and finish with the plural Karmaṇi Loṭ verb `आह्रियन्ताम् ।`.",
+        "project_id": "university_bookstore/SAMSQL",
+        "starter_ssql": "आपणेभ्यः\n    ",
+        "hint": "3 projected columns require the plural (`बहुवचनम्`) verb: `सङ्ख्या च नाम च नगरम् च आह्रियन्ताम् ।`.",
+        "solution_ssql": "आपणेभ्यः सङ्ख्या च नाम च नगरम् च आह्रियन्ताम् ।",
+        "expected_columns": [
+          "id",
+          "name",
+          "city"
+        ],
+        "expected_min_rows": 3
+      }
+    },
+    {
+      "id": "track-b-03",
+      "track_id": "track-b",
+      "track_title": "Track B: Samskrutam Through SSQL",
+      "filename": "03-linga-and-visheshana-concordance.md",
+      "title": "अध्याय ३: लिङ्गविशेषणान्वयः (Gender & Adjective Concordance)",
+      "markdown": "# अध्याय ३: लिङ्गविशेषणान्वयः (Gender & Adjective Concordance)\n\n## यल्लिङ्गं यद्वचनं या च विभक्तिर्विशेष्यस्य\n\nपाणिनीयव्याकरणे विशेषणम् (adjective) सर्वनाम च (pronoun) विशेष्यस्य **लिङ्गम्** (gender) **वचनम्** (number) **विभक्तिम्** (case) च अनुसरतः। SSQL सङ्कलकः (compiler) एतम् अन्वयम् सूक्ष्मरूपेण परीक्षते।\n\n| लिङ्गम् | उदाहरणस्तम्भः | `=` (सम) | `>` (अधिक) | `<` (न्यून) | `IS NULL` (रिक्त) | तृतीयासर्वनाम | पञ्चमीषष्ठीसर्वनाम |\n|---------|---------------|----------|-----------|-----------|------------------|---------------|---------------------|\n| **पुंलिङ्गम्** | `अङ्कः`, `भण्डारः` | `समः` | `अधिकः` | `न्यूनः` | `रिक्तः` | `इत्यनेन` | `इत्यस्मात्` / `इत्यस्य` |\n| **स्त्रीलिङ्गम्** | `भाषा`, `सङ्ख्या` | `समा` | `अधिका` | `न्यूना` | `रिक्ता` | `इत्यनया` | `इत्यस्याः` |\n| **नपुंसकलिङ्गम्** | `मूल्यम्`, `शीर्षकम्` | `समम्` | `अधिकम्` | `न्यूनम्` | `रिक्तम्` | `इत्यनेन` | `इत्यस्मात्` / `इत्यस्य` |\n\n## १. नपुंसकलिङ्गोदाहरणम् (`मूल्यम्`)\n\n`मूल्य` इति नपुंसकलिङ्गशब्दः, अतः `इत्यस्मात् अधिकम्` प्रयुज्यते:\n\n```ssql\nपुस्तकेभ्यः\n    मूल्यम् २० इत्यस्मात् अधिकम् अस्ति इति नियमेन\n    शीर्षकम् च मूल्यम् च\nआह्रियेताम् ।\n```\n\n## २. स्त्रीलिङ्गोदाहरणम् (`भाषा`)\n\n`भाषा` इति स्त्रीलिङ्गशब्दः, अतः `इत्यनया समा` प्रयुज्यते:\n\n```ssql\nपुस्तकेभ्यः\n    भाषा \"Sanskrit\" इत्यनया समा अस्ति इति नियमेन\n    शीर्षकम् च भाषा च\nआह्रियेताम् ।\n```\n\n## ३. पुंलिङ्गोदाहरणम् (`भण्डारः`)\n\n`भण्डार` इति पुंलिङ्गशब्दः, अतः `इत्यस्मात् न्यूनः` प्रयुज्यते:\n\n```ssql\nवस्तुसूचीभ्यः\n    भण्डारः १० इत्यस्मात् न्यूनः अस्ति इति नियमेन\n    पुस्तकसङ्ख्या च भण्डारः च\nआह्रियेताम् ।\n```\n",
+      "exercise": {
+        "title": "Exercise B3: लिङ्गसमन्वयः • Three-Gender Adjective Concordance",
+        "prompt": "In `पुस्तकानि` (`पुस्तकेभ्यः`), `भाषा` (`language`) is Feminine Singular (`स्त्रीलिङ्गम् एकवचनम्`). Filter where `भाषा` equals `\"Sanskrit\"` using the feminine pronoun `इत्यनया` and feminine adjective `समा` (`भाषा \"Sanskrit\" इत्यनया समा अस्ति इति नियमेन`), and fetch 2 columns: `शीर्षकम्` and `भाषा`.",
+        "project_id": "university_bookstore/SAMSQL",
+        "starter_ssql": "पुस्तकेभ्यः\n    ",
+        "hint": "Write `भाषा \"Sanskrit\" इत्यनया समा अस्ति इति नियमेन शीर्षकम् च भाषा च आह्रियेताम् ।`.",
+        "solution_ssql": "पुस्तकेभ्यः भाषा \"Sanskrit\" इत्यनया समा अस्ति इति नियमेन शीर्षकम् च भाषा च आह्रियेताम् ।",
+        "expected_columns": [
+          "title",
+          "language"
+        ],
+        "expected_min_rows": 2
+      }
+    }
+  ],
+  "downloads": [
+    {
+      "id": "vsix",
+      "title": "VS Code Extension (.vsix)",
+      "subtitle": "Syntax highlighting, Hover grammar help, Autocomplete, Formatter & LSP client",
+      "filename": "ssql-vscode-0.2.1.vsix",
+      "url": "/downloads/ssql-vscode-0.2.1.vsix",
+      "size": "11.6 KB",
+      "sha256": "a7a11d0531283ec0",
+      "sha256_full": "a7a11d0531283ec02d02f8804299360179b7dedee7ee2a7c19b0183227289990",
+      "install_cmd": "code --install-extension ssql-vscode-0.2.1.vsix",
+      "source_cmd": "cd editors/vscode && npm install && npx @vscode/vsce package && code --install-extension ssql-vscode-0.2.1.vsix",
+      "platform_note": "Cross-Platform (macOS, Linux, Windows)",
+      "badge": "Cross-Platform VSIX"
+    },
+    {
+      "id": "compiler",
+      "title": "SSQL Compiler CLI (ssql_compiler)",
+      "subtitle": "Native release binary with SQLite/PostgreSQL codegen, --fmt, --lint & --from-sql",
+      "filename": "ssql_compiler-0.2.1-macos-arm64.tar.gz",
+      "url": "/downloads/ssql_compiler-0.2.1-macos-arm64.tar.gz",
+      "size": "2.41 MB",
+      "sha256": "9c8b2926d2a5920d",
+      "sha256_full": "9c8b2926d2a5920d16570cb9be3f5819558c7f01c275e993e905aca21047f91d",
+      "install_cmd": "tar -xzf ssql_compiler-0.2.1-macos-arm64.tar.gz && sudo install -m 755 ssql_compiler /usr/local/bin/",
+      "source_cmd": "cargo install --path .",
+      "platform_note": "Prebuilt for macOS ARM64 (Apple Silicon) • Linux/Windows/Intel: cargo install --path .",
+      "badge": "macOS ARM64 Binary"
+    },
+    {
+      "id": "lsp",
+      "title": "SSQL Language Server (ssql-lsp)",
+      "subtitle": "Native Tower LSP binary with automatic schema.सं discovery, Kāraka diagnostics, hover & completions",
+      "filename": "ssql-lsp-0.2.1-macos-arm64.tar.gz",
+      "url": "/downloads/ssql-lsp-0.2.1-macos-arm64.tar.gz",
+      "size": "3.01 MB",
+      "sha256": "1a2e000771e077fb",
+      "sha256_full": "1a2e000771e077fb2b1d3b49e332ceda96e5a919aba5409f5eb797698d573724",
+      "install_cmd": "tar -xzf ssql-lsp-0.2.1-macos-arm64.tar.gz && sudo install -m 755 ssql-lsp /usr/local/bin/",
+      "source_cmd": "cargo install --path ssql-lsp",
+      "platform_note": "Prebuilt for macOS ARM64 (Apple Silicon) • Linux/Windows/Intel: cargo install --path ssql-lsp",
+      "badge": "macOS ARM64 Binary"
+    },
+    {
+      "id": "wheel",
+      "title": "Python Bindings Wheel (ssql-py)",
+      "subtitle": "Native PyO3 wheel providing import ssql; ssql.Compiler() for Python & uv workflows",
+      "filename": "ssql-0.2.1-cp314-cp314-macosx_11_0_arm64.whl",
+      "url": "/downloads/ssql-0.2.1-cp314-cp314-macosx_11_0_arm64.whl",
+      "size": "1.70 MB",
+      "sha256": "5259ed42ffb73522",
+      "sha256_full": "5259ed42ffb735223f9593bc5d9da95f93960d66340d172d6529852a07e5a59a",
+      "install_cmd": "uv pip install ssql-0.2.1-cp314-cp314-macosx_11_0_arm64.whl",
+      "source_cmd": "uv pip install ./ssql-py",
+      "platform_note": "Prebuilt for macOS ARM64 (Python 3.14) • Any OS/Python 3.10+: uv pip install ./ssql-py",
+      "badge": "macOS ARM64 • Py3.14 Wheel"
+    },
+    {
+      "id": "wasm",
+      "title": "WebAssembly SDK (ssql-wasm)",
+      "subtitle": "Browser & Edge WASM package (compile_ssql_wasm, format_ssql_wasm, lint_ssql_wasm, transpile_sql_to_ssql_wasm)",
+      "filename": "ssql-wasm-0.2.1.tar.gz",
+      "url": "/downloads/ssql-wasm-0.2.1.tar.gz",
+      "size": "456.6 KB",
+      "sha256": "7c8d95494e75aa74",
+      "sha256_full": "7c8d95494e75aa7411c924a20c8293d5ecbb898cce7722929de45038ea894de3",
+      "install_cmd": "tar -xzf ssql-wasm-0.2.1.tar.gz",
+      "source_cmd": "wasm-pack build --target web website/ssql-wasm",
+      "platform_note": "Cross-Platform Browser & Edge WebAssembly ES Module",
+      "badge": "Cross-Platform WASM"
+    }
+  ]
+}

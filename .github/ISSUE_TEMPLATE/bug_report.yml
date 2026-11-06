@@ -1,0 +1,44 @@
+name: Bug report
+description: Something in the compiler, bindings, LSP, or VS Code extension isn't working correctly.
+labels: ["bug"]
+body:
+  - type: textarea
+    id: ssql-source
+    attributes:
+      label: SSQL source
+      description: The `.सं` source (and schema, if relevant) that triggers the problem.
+      render: text
+    validations:
+      required: true
+  - type: input
+    id: command
+    attributes:
+      label: Command run
+      description: The exact command you ran (e.g. `cargo run -- query.सं --dialect sqlite`).
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include the full error message or incorrect SQL output.
+    validations:
+      required: true
+  - type: input
+    id: rustc-version
+    attributes:
+      label: rustc --version
+    validations:
+      required: false
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+    validations:
+      required: false

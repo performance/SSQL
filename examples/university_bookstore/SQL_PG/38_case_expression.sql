@@ -1,0 +1,7 @@
+SELECT title,
+       CASE 
+           WHEN price < 20 THEN 'Budget'
+           WHEN price < 50 THEN 'Standard'
+           ELSE 'Premium'
+       END
+FROM books;

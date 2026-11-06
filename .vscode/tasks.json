@@ -1,0 +1,27 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "npm",
+            "script": "compile",
+            "path": "editors/vscode",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": "$tsc",
+            "label": "npm: compile",
+            "detail": "compile the extension"
+        },
+        {
+            "type": "shell",
+            "command": "cargo build -p ssql-lsp",
+            "group": "build",
+            "problemMatcher": "$rustc",
+            "label": "cargo build lsp",
+            "presentation": {
+                "reveal": "silent"
+            }
+        }
+    ]
+}

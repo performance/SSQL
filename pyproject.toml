@@ -1,0 +1,24 @@
+[project]
+name = "ssql-dev"
+version = "0.2.1"
+description = "Development/verification tooling for the SSQL compiler repo (verify_all.py, website/server.py, and friends) - not a distributable package. See ssql-py/ for the published Python bindings."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "maturin>=1.0,<2.0",
+    "playwright>=1.64.1",
+    "pytest>=9.1.1",
+    "pytest-playwright>=0.10.0",
+    "ssql",
+]
+
+[tool.uv.sources]
+ssql = { path = "ssql-py", editable = true }
+
+[tool.pytest.ini_options]
+testpaths = ["ssql-py/test_ssql.py", "website/test_website_playground.py"]
+
+

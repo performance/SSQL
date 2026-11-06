@@ -1,0 +1,144 @@
+{
+    "name": "ssql",
+    "displayName": "SSQL (Samskrit SQL)",
+    "description": "Language support for SSQL (Samskrtam Structured Query Language)",
+    "version": "0.2.1",
+    "publisher": "samssql",
+    "readme": "README.md",
+    "private": true,
+    "license": "Apache-2.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/performance/SSQL.git"
+    },
+    "engines": {
+        "vscode": "^1.75.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "activationEvents": [
+        "onLanguage:ssql",
+        "onCommand:ssql.importFromSql"
+    ],
+    "main": "./out/extension.js",
+    "contributes": {
+        "languages": [
+            {
+                "id": "ssql",
+                "aliases": [
+                    "SSQL",
+                    "Samskrit SQL"
+                ],
+                "extensions": [
+                    ".सं",
+                    ".ssql"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "ssql",
+                "scopeName": "source.ssql",
+                "path": "./syntaxes/ssql.tmLanguage.json"
+            }
+        ],
+        "configuration": {
+            "type": "object",
+            "title": "SSQL configuration",
+            "properties": {
+                "ssql.serverPath": {
+                    "type": "string",
+                    "default": null,
+                    "description": "Path to the ssql-lsp binary. If not set, extension tries to find it in default locations."
+                },
+                "ssql.trace.server": {
+                    "scope": "window",
+                    "type": "string",
+                    "enum": [
+                        "off",
+                        "messages",
+                        "verbose"
+                    ],
+                    "default": "off",
+                    "description": "Traces the communication between VS Code and the SSQL language server."
+                }
+            }
+        },
+        "commands": [
+            {
+                "command": "ssql.generateSqlite",
+                "title": "SSQL: Generate SQL (SQLite)",
+                "category": "SSQL"
+            },
+            {
+                "command": "ssql.generatePostgres",
+                "title": "SSQL: Generate SQL (PostgreSQL)",
+                "category": "SSQL"
+            },
+            {
+                "command": "ssql.formatDocument",
+                "title": "SSQL: Format Document (--fmt)",
+                "category": "SSQL"
+            },
+            {
+                "command": "ssql.lintDocument",
+                "title": "SSQL: Lint Document (--lint)",
+                "category": "SSQL"
+            },
+            {
+                "command": "ssql.importFromSql",
+                "title": "SSQL: Transpile SQL to SSQL (--from-sql)",
+                "category": "SSQL"
+            },
+            {
+                "command": "ssql.viewAst",
+                "title": "SSQL: View AST",
+                "category": "SSQL"
+            },
+            {
+                "command": "ssql.viewSymTable",
+                "title": "SSQL: View Symbol Table",
+                "category": "SSQL"
+            },
+            {
+                "command": "ssql.installCli",
+                "title": "SSQL: Install CLI Tools",
+                "category": "SSQL"
+            }
+        ],
+        "menus": {
+            "editor/context": [
+                {
+                    "command": "ssql.generateSqlite",
+                    "when": "resourceLangId == ssql",
+                    "group": "ssql_grp@1"
+                },
+                {
+                    "command": "ssql.formatDocument",
+                    "when": "resourceLangId == ssql",
+                    "group": "ssql_grp@3"
+                },
+                {
+                    "command": "ssql.viewAst",
+                    "when": "resourceLangId == ssql",
+                    "group": "ssql_grp@4"
+                }
+            ]
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -b",
+        "watch": "tsc -b -w"
+    },
+    "devDependencies": {
+        "@types/vscode": "^1.75.0",
+        "@types/node": "^16.11.7",
+        "typescript": "^4.9.5"
+    },
+    "dependencies": {
+        "vscode-languageclient": "^8.1.0"
+    }
+}

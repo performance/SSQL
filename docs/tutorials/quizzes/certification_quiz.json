@@ -1,0 +1,82 @@
+[
+  {
+    "id": "Q01",
+    "level": "प्रवेशः (Beginner)",
+    "title": "Single-Column Projection & Ablative Source (पञ्चमी + एकवचनम्)",
+    "prompt": "Fetch the title (शीर्षकम्) of all books (पुस्तकेभ्यः) published after the year २०१०.",
+    "reference_sql": "SELECT title FROM books WHERE publication_year > 2010;",
+    "solution_ssql": "पुस्तकेभ्यः प्रकाशनवर्षम् २०१० इत्यस्मात् अधिकम् अस्ति इति नियमेन शीर्षकम् आह्रियताम् ।"
+  },
+  {
+    "id": "Q02",
+    "level": "प्रवेशः (Beginner)",
+    "title": "Dual Projection & Feminine Concordance (द्विवचनम् + स्त्रीलिङ्गम्)",
+    "prompt": "Fetch the title and price of books whose language (भाषा, feminine) equals \"Sanskrit\".",
+    "reference_sql": "SELECT title, price FROM books WHERE language = 'Sanskrit';",
+    "solution_ssql": "पुस्तकेभ्यः भाषा \"Sanskrit\" इत्यनया समा अस्ति इति नियमेन शीर्षकम् च मूल्यम् च आह्रियेताम् ।"
+  },
+  {
+    "id": "Q03",
+    "level": "प्रवेशः (Beginner)",
+    "title": "Masculine Concordance (पुंलिङ्ग-अन्वयः)",
+    "prompt": "From inventory (वस्तुसूचीभ्यः), fetch book_id and quantity (भण्डारः, masculine) where quantity is less than १०.",
+    "reference_sql": "SELECT book_id, quantity FROM inventory WHERE quantity < 10;",
+    "solution_ssql": "वस्तुसूचीभ्यः भण्डारः १० इत्यस्मात् न्यूनः अस्ति इति नियमेन पुस्तकसङ्ख्या च भण्डारः च आह्रियेताम् ।"
+  },
+  {
+    "id": "Q04",
+    "level": "मध्यमः (Intermediate)",
+    "title": "Relational Join & Genitive Qualification (सह ... इति मेलनेन)",
+    "prompt": "Join books with authors and fetch the book title and author name.",
+    "reference_sql": "SELECT b.title, a.name FROM books b JOIN authors a ON b.author_id = a.id;",
+    "solution_ssql": "पुस्तकेभ्यः लेखकैः सह पुस्तकस्य लेखकसङ्ख्या लेखकस्य सङ्ख्या इत्यनया समा अस्ति इति मेलनेन पुस्तकस्य शीर्षकम् च लेखकस्य नाम च आह्रियेताम् ।"
+  },
+  {
+    "id": "Q05",
+    "level": "मध्यमः (Intermediate)",
+    "title": "Grouping & Aggregation (इति समूहेन + माध्यम्)",
+    "prompt": "Group books by language and fetch each language along with its average price.",
+    "reference_sql": "SELECT language, AVG(price) FROM books GROUP BY language;",
+    "solution_ssql": "पुस्तकेभ्यः पुस्तकस्य भाषा इति समूहेन पुस्तकस्य भाषा च पुस्तकस्य मूल्यस्य माध्यम् च आह्रियेताम् ।"
+  },
+  {
+    "id": "Q06",
+    "level": "मध्यमः (Intermediate)",
+    "title": "Group Filtering with HAVING (इति समूहनियमेन)",
+    "prompt": "Group books by language and fetch languages having more than १ book.",
+    "reference_sql": "SELECT language, COUNT(id) FROM books GROUP BY language HAVING COUNT(id) > 1;",
+    "solution_ssql": "पुस्तकेभ्यः भाषा इति समूहेन सङ्ख्यायाः गणना १ इत्यस्याः अधिका अस्ति इति समूहनियमेन भाषा च सङ्ख्यायाः गणना च आह्रियेताम् ।"
+  },
+  {
+    "id": "Q07",
+    "level": "मध्यमः (Intermediate)",
+    "title": "Ordering & Limiting (… अवरोहः इति क्रमेण + … इति मित्या)",
+    "prompt": "Fetch the top ३ most expensive books (title and price) ordered by price descending.",
+    "reference_sql": "SELECT title, price FROM books ORDER BY price DESC LIMIT 3;",
+    "solution_ssql": "पुस्तकेभ्यः मूल्यम् अवरोहः इति क्रमेण ३ इति मित्या शीर्षकम् च मूल्यम् च आह्रियेताम् ।"
+  },
+  {
+    "id": "Q08",
+    "level": "उच्चः (Advanced)",
+    "title": "Range Filtering (इत्यनयोः मध्ये)",
+    "prompt": "Fetch the title and price of books priced between १५ and ३०. The two bounds are a च-list of two, so they take the dual pronoun इत्यनयोः, and need no यत् … इति group.",
+    "reference_sql": "SELECT title, price FROM books WHERE price BETWEEN 15 AND 30;",
+    "solution_ssql": "पुस्तकेभ्यः मूल्यम् १५ च ३० च इत्यनयोः मध्ये अस्ति इति नियमेन शीर्षकम् च मूल्यम् च आह्रियेताम् ।"
+  },
+  {
+    "id": "Q09",
+    "level": "उच्चः (Advanced)",
+    "title": "Window Ranking (श्रेणी यत्र ... आधारेण विभाजनम्)",
+    "prompt": "Rank books by price descending within each language partition.",
+    "reference_sql": "SELECT title, language, RANK() OVER (PARTITION BY language ORDER BY price DESC) AS मूल्यश्रेणी FROM books;",
+    "solution_ssql": "पुस्तकेभ्यः शीर्षकम् च भाषा च श्रेणी यत्र भाषायाः आधारेण विभाजनम् मूल्यस्य अनुसारम् अवरोहक्रमेण मूल्यश्रेणी इति आख्या च आह्रियन्ताम् ।"
+  },
+  {
+    "id": "Q10",
+    "level": "उच्चः (Advanced)",
+    "title": "Pure User-Defined Function (शुद्धम् कार्यम् रच्यताम्)",
+    "prompt": "Define a pure function द्विगुणितम् that doubles a price, and fetch each book's title and doubled price.",
+    "reference_sql": "SELECT title, (price * 2) AS द्विगुणितमूल्यम् FROM books;",
+    "solution_ssql": "द्विगुणितम् इति शुद्धम् कार्यम् रच्यताम् यत्र वास्तविकः प्रतिदीयते च मूल्यम् इति वास्तविकः दीयते मूल्यम् च २ च इत्यनयोः गुणनम् इति उत्तरम् प्रतिदीयताम् इति कार्यम् । पुस्तकेभ्यः शीर्षकम् च मूल्यस्य द्विगुणितम् द्विगुणितमूल्यम् इति आख्या च आह्रियेताम् ।"
+  }
+]

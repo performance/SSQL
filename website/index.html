@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- MANDATORY: Declare support for both light and dark themes -->
+  <meta name="color-scheme" content="light dark">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Noto+Sans+Devanagari:wght@400;500;600;700&amp;family=Tiro+Devanagari+Sanskrit:ital@0;1&amp;display=swap" rel="stylesheet">
+  <script>
+    try {
+      const savedScheme = localStorage.getItem("color-scheme") ?? "light dark";
+      document.querySelector('meta[name="color-scheme"]').content = savedScheme;
+      const savedTheme = localStorage.getItem("ssql-theme") ?? "bhojpatra";
+      const savedFont = localStorage.getItem("ssql-font") ?? "sans";
+      const savedScale = localStorage.getItem("ssql-scale") ?? "105";
+      document.documentElement.dataset.theme = savedTheme;
+      document.documentElement.dataset.font = savedFont;
+      document.documentElement.style.setProperty("--ui-scale", `${savedScale}%`);
+    } catch (e) {}
+  </script>
+  <title>संस्कृतम् SQL (SSQL) • Pāṇinian Kāraka Relational Query Language</title>
+  <meta name="description" content="SSQL (संस्कृतम् SQL) is a Pāṇinian Kāraka-driven relational query language written in 100% pure Devanāgarī that compiles directly to SQLite and PostgreSQL with static gender, number, and case concordance.">
+  <meta property="og:title" content="संस्कृतम् SQL (SSQL) • Pāṇinian Kāraka Relational Query Language">
+  <meta property="og:description" content="Express relational database queries in a subset of valid Samskrutam with static Liṅga, Vacana, and Vibhakti type checking. Run 176 queries across 37 projects live in your browser via WebAssembly.">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%238c2d19'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='Noto Sans Devanagari, sans-serif' font-weight='700' font-size='34' fill='%23fff8ee'%3E%E0%A4%B8%E0%A4%82%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a href="#playground" class="skip-link">Skip to Interactive Playground</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#top" class="brand">
+        <span class="brand-emblem" lang="sa" aria-hidden="true">सं</span>
+        <span class="brand-title"><span lang="sa">संस्कृतम्</span> SQL <span class="badge-version">v0.2.1</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Primary Navigation">
+        <a href="#playground">Playground</a>
+        <a href="#tutorials">Tutorials</a>
+        <a href="#downloads">Downloads</a>
+        <a href="#constitution">Constitution</a>
+        <a href="#karaka-system">Kāraka Grammar</a>
+      </nav>
+      <div class="header-actions">
+        <span id="runtime-status" class="status-pill status-loading" role="status" aria-live="polite" title="Initializing WebAssembly Compiler &amp; SQLite">
+          WASM…
+        </span>
+        <div class="quick-zoom-group" role="group" aria-label="Text Size &amp; Appearance">
+          <button type="button" id="btn-font-dec" class="zoom-step-btn" title="Decrease font size">A−</button>
+          <button type="button" id="btn-font-reset-inline" class="zoom-step-btn zoom-reset-inline-btn" title="Click to reset font size (105%)">
+            <span id="font-scale-badge" class="scale-badge">105%</span>
+          </button>
+          <button type="button" id="btn-font-inc" class="zoom-step-btn" title="Increase font size">A+</button>
+          <button type="button" id="btn-appearance" class="appearance-toggle-btn" commandfor="appearance-popover" command="toggle-popover" title="Customize Theme, Font &amp; Text Size">
+            <span aria-hidden="true">Aa</span>
+          </button>
+        </div>
+        <button type="button" id="theme-toggle" class="theme-toggle-btn" title="Toggle light or dark color scheme">
+          <span class="theme-option-dark">
+            <span aria-hidden="true">🌙</span>
+            <span class="visually-hidden">Switch to dark theme</span>
+          </span>
+          <span class="theme-option-light">
+            <span aria-hidden="true">☀️</span>
+            <span class="visually-hidden">Switch to light theme</span>
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Declarative Appearance Popover (Theme, Font Pairing & Text Size) -->
+    <div id="appearance-popover" class="appearance-popover" popover aria-label="Appearance Settings">
+      <div class="popover-section">
+        <div class="popover-section-header">
+          <span class="popover-label">Text &amp; Devanagari Size</span>
+          <button type="button" id="btn-font-reset" class="popover-reset-btn">Reset (105%)</button>
+        </div>
+        <div class="scale-presets" role="group" aria-label="Font size presets">
+          <button type="button" class="scale-preset-btn" data-scale="95">95%</button>
+          <button type="button" class="scale-preset-btn active" data-scale="105">105%</button>
+          <button type="button" class="scale-preset-btn" data-scale="115">115%</button>
+          <button type="button" class="scale-preset-btn" data-scale="125">125%</button>
+          <button type="button" class="scale-preset-btn" data-scale="140">140%</button>
+        </div>
+      </div>
+
+      <div class="popover-section">
+        <span class="popover-label">Color Theme (वर्णयोजना)</span>
+        <div class="theme-swatch-grid" role="radiogroup" aria-label="Color Themes">
+          <button type="button" class="theme-swatch-btn active" data-theme-choice="bhojpatra" data-scheme="light">
+            <span class="swatch-preview swatch-bhojpatra" aria-hidden="true">अ</span>
+            <span class="swatch-info">
+              <strong>भूर्जपत्रम्</strong>
+              <small>Manuscript Light</small>
+            </span>
+          </button>
+          <button type="button" class="theme-swatch-btn" data-theme-choice="sphatika" data-scheme="light">
+            <span class="swatch-preview swatch-sphatika" aria-hidden="true">अ</span>
+            <span class="swatch-info">
+              <strong>स्फटिकः</strong>
+              <small>Daylight Crisp</small>
+            </span>
+          </button>
+          <button type="button" class="theme-swatch-btn" data-theme-choice="tamrapatta" data-scheme="light">
+            <span class="swatch-preview swatch-tamrapatta" aria-hidden="true">अ</span>
+            <span class="swatch-info">
+              <strong>ताम्रपट्टः</strong>
+              <small>Sepia Reader</small>
+            </span>
+          </button>
+          <button type="button" class="theme-swatch-btn" data-theme-choice="nisha" data-scheme="dark">
+            <span class="swatch-preview swatch-nisha" aria-hidden="true">अ</span>
+            <span class="swatch-info">
+              <strong>निशा</strong>
+              <small>Midnight Dark</small>
+            </span>
+          </button>
+          <button type="button" class="theme-swatch-btn" data-theme-choice="tamala" data-scheme="dark">
+            <span class="swatch-preview swatch-tamala" aria-hidden="true">अ</span>
+            <span class="swatch-info">
+              <strong>तमालः</strong>
+              <small>Pitch OLED</small>
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <div class="popover-section">
+        <span class="popover-label">Typography &amp; Devanagari Font (लिपिः)</span>
+        <div class="font-choice-grid" role="radiogroup" aria-label="Font Family">
+          <button type="button" class="font-choice-btn active" data-font-choice="sans">
+            <span class="font-sample font-sample-sans">पुस्तकेभ्यः</span>
+            <small>Modern Sans (Noto Sans + Inter)</small>
+          </button>
+          <button type="button" class="font-choice-btn" data-font-choice="serif">
+            <span class="font-sample font-sample-serif">पुस्तकेभ्यः</span>
+            <small>Classical Śāstra (Tiro Sanskrit + Serif)</small>
+          </button>
+          <button type="button" class="font-choice-btn" data-font-choice="mono">
+            <span class="font-sample font-sample-mono">पुस्तकेभ्यः</span>
+            <small>Developer Mono (JetBrains Mono)</small>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">
+            पाणिनीयकारकाधारितदत्तांशभाषा •
+            <a href="#constitution" class="eyebrow-link">v1.0 Constitution (वाचिकता तथा शुद्धता) →</a>
+          </p>
+          <h1>Sanskrit Grammar for Relational Algebra</h1>
+          <p class="hero-lead">
+            <strong>SSQL (संस्कृतम् SQL)</strong> expresses relational database queries in a subset of valid Samskrutam and compiles directly to SQLite and PostgreSQL.
+          </p>
+          <div class="hero-cta-row">
+            <a href="#playground" class="btn btn-primary">Interactive Playground</a>
+            <a href="#tutorials" class="btn btn-secondary">Interactive Tutorials</a>
+            <a href="#downloads" class="btn btn-secondary">Download Compiler &amp; VSIX</a>
+          </div>
+        </div>
+
+        <div class="hero-card" aria-label="SSQL to SQL Example">
+          <pre class="hero-code"><code><span class="tok-panchami" title="पञ्चमी बहुवचनम् (Ablative Plural) = FROM books">पुस्तकेभ्यः</span>
+    <span class="tok-ident" title="नपुंसकलिङ्गम् एकवचनम् (Neuter Singular) = price">मूल्यम्</span> <span class="tok-num">२०</span> <span class="tok-pronoun" title="Neuter Ablative Pronoun = than that">इत्यस्मात्</span> <span class="tok-adj" title="Neuter Singular Adjective = greater">अधिकम्</span> <span class="tok-kw">इति नियमेन</span>
+    <span class="tok-ident">शीर्षकम्</span> <span class="tok-kw">च</span> <span class="tok-ident">मूल्यम्</span> <span class="tok-kw">च</span>
+<span class="tok-verb" title="Karmaṇi Loṭ Dual Verb (agrees with 2 projected columns)">आह्रियेताम्</span> <span class="tok-danda">।</span></code></pre>
+          <pre class="hero-code hero-sql"><code>SELECT t1.title, t1.price
+FROM books t1
+WHERE t1.price &gt; 20;</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Playground Section -->
+    <section id="playground" class="playground-section" aria-labelledby="playground-heading">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <h2 id="playground-heading">प्रयोगशाला • Interactive SSQL Playground &amp; Full Example Corpus</h2>
+            <p class="section-subtitle">
+              Browse and edit <strong>every example project</strong> (<code>query.सं</code> + <code>schema.सं</code>) with live syntax highlighting, exact span diagnostics, hover grammar help, and autocomplete (<code>Ctrl+Space</code>).
+            </p>
+          </div>
+        </div>
+
+        <div class="playground-controls" aria-label="Project, Query, and SQL Dialect Selection">
+          <label class="control-group control-group-project" for="project-select">
+            <span class="control-label">Project:</span>
+            <select id="project-select" class="select-control">
+              <option value="__featured__">★ Featured Quick Start Scenarios • University Bookstore</option>
+            </select>
+          </label>
+
+          <label class="control-group control-group-query" for="example-select">
+            <span class="control-label">Query:</span>
+            <select id="example-select" class="select-control"></select>
+          </label>
+
+          <fieldset class="dialect-radio-group" id="dialect-radio-group" aria-label="Target SQL Dialect">
+            <legend class="dialect-legend">Dialect</legend>
+            <label class="dialect-radio-option" for="dialect-radio-sqlite">
+              <input type="radio" name="sql-dialect" id="dialect-radio-sqlite" value="sqlite" checked />
+              <span>SQLite</span>
+            </label>
+            <label class="dialect-radio-option" for="dialect-radio-postgres">
+              <input type="radio" name="sql-dialect" id="dialect-radio-postgres" value="postgres" />
+              <span>PostgreSQL</span>
+            </label>
+            <select id="dialect-select" class="visually-hidden" aria-hidden="true" tabindex="-1">
+              <option value="sqlite">SQLite</option>
+              <option value="postgres">PostgreSQL</option>
+            </select>
+          </fieldset>
+
+          <div id="scenario-description" class="scenario-desc-grid" aria-live="polite"></div>
+        </div>
+
+        <!-- Action Toolbar -->
+        <div class="playground-toolbar" role="toolbar" aria-label="Compiler Actions">
+          <div class="toolbar-left">
+            <button type="button" id="btn-run" class="btn btn-primary btn-sm">
+              ▶ Compile &amp; Execute <kbd>⌘↵</kbd>
+            </button>
+            <button type="button" id="btn-format" class="btn btn-secondary btn-sm" title="Format SSQL (--fmt)">
+              ✨ Format (<code>--fmt</code>)
+            </button>
+            <button type="button" id="btn-lint" class="btn btn-secondary btn-sm" title="Run Style &amp; Purity Linter (--lint)">
+              🔍 Lint (<code>--lint</code>)
+            </button>
+            <button type="button" id="btn-explain" class="btn btn-secondary btn-sm" title="Inspect Pāṇinian Morphology &amp; Kāraka Roles">
+              📖 अध्येता Breakdown
+            </button>
+            <button type="button" id="btn-trigger-autocomplete" class="btn btn-ghost btn-sm" title="Trigger Sanskrit &amp; Schema Autocomplete (Ctrl+Space)">
+              ⌨ Autocomplete (<kbd>⌃Space</kbd>)
+            </button>
+          </div>
+          <div class="toolbar-right">
+            <div class="layout-mode-group" role="group" aria-label="Workspace Layout Mode">
+              <button type="button" id="btn-layout-split" class="layout-mode-btn active" data-layout-mode="split" title="Side-by-side 2-pane layout">
+                ◫ Split
+              </button>
+              <button type="button" id="btn-layout-stacked" class="layout-mode-btn" data-layout-mode="stacked" title="Full-width stacked layout for wide tables and queries">
+                ⊟ Full Width
+              </button>
+            </div>
+            <button type="button" id="btn-reset-db" class="btn btn-ghost btn-sm" title="Reset browser SQLite database to current project schema &amp; seed">
+              ↺ Reset Project DB
+            </button>
+          </div>
+        </div>
+
+        <!-- Split Workspace -->
+        <div class="playground-workspace" id="playground-workspace">
+          <!-- Left Pane: Editors -->
+          <div class="workspace-pane editor-pane">
+            <div class="pane-tabs editor-pane-tabs" role="tablist" aria-label="Source Editors">
+              <button type="button" role="tab" aria-selected="true" aria-controls="panel-ssql" id="tab-ssql" class="pane-tab active">
+                <span class="tab-title">प्रश्नाः</span>
+                <span class="tab-sub"><code>query.सं</code></span>
+              </button>
+              <button type="button" role="tab" aria-selected="false" aria-controls="panel-schema" id="tab-schema" class="pane-tab">
+                <span class="tab-title">पटलनिरूपणम्</span>
+                <span class="tab-sub"><code>schema.सं</code></span>
+              </button>
+              <button type="button" role="tab" aria-selected="false" aria-controls="panel-from-sql" id="tab-from-sql" class="pane-tab">
+                <span class="tab-title">SQL → SSQL</span>
+                <span class="tab-sub"><code>--from-sql</code></span>
+              </button>
+            </div>
+
+            <!-- Categorized All-Keywords & Vibhakti Chip Palette -->
+            <div class="chip-palette-container" aria-label="Categorized SSQL Keyword &amp; Vibhakti Chip Palette">
+              <div class="chip-category-tabs" role="tablist" aria-label="Keyword Categories">
+                <button type="button" class="chip-cat-btn active" data-chip-cat="clauses">Clauses &amp; Particles</button>
+                <button type="button" class="chip-cat-btn" data-chip-cat="verbs">Verbs (क्रियापदानि)</button>
+                <button type="button" class="chip-cat-btn" data-chip-cat="comparisons">Comparisons (M/F/N)</button>
+                <button type="button" class="chip-cat-btn" data-chip-cat="aggregates">Aggregates &amp; Math</button>
+                <button type="button" class="chip-cat-btn" data-chip-cat="windows_udfs">Windows, CTEs &amp; UDFs</button>
+                <button type="button" class="chip-cat-btn" data-chip-cat="ddl_types">DDL, Types &amp; Gender</button>
+                <button type="button" class="chip-cat-btn" data-chip-cat="schema_stems">Active Schema &amp; अङ्काः</button>
+              </div>
+              <div id="chip-palette-items" class="quick-insert-bar" aria-label="Quick insert SSQL tokens"></div>
+            </div>
+
+            <!-- Panel 1: SSQL Query Editor with Syntax Highlighting, Gutter, Squigglies, Hover & Autocomplete -->
+            <div id="panel-ssql" role="tabpanel" aria-labelledby="tab-ssql" class="editor-panel">
+              <div class="code-editor-shell" id="ssql-editor-shell">
+                <div id="ssql-gutter" class="code-gutter" aria-hidden="true"></div>
+                <div class="code-stage">
+                  <pre id="ssql-highlight" class="code-highlight-backdrop" aria-hidden="true"><code></code></pre>
+                  <label for="ssql-editor" class="visually-hidden">SSQL Query Source (.सं)</label>
+                  <textarea id="ssql-editor" lang="sa" class="code-textarea overlay-textarea" spellcheck="false" autocomplete="off" autocapitalize="off"></textarea>
+                  <!-- Floating Autocomplete Menu -->
+                  <div id="editor-autocomplete" class="autocomplete-popup" role="listbox" aria-label="SSQL Autocomplete Suggestions" hidden></div>
+                  <!-- Floating Mouse Hover Tooltip -->
+                  <div id="editor-hover-tooltip" class="hover-tooltip" role="tooltip" hidden></div>
+                </div>
+              </div>
+
+              <!-- Live Cursor Hover / Grammar Help & Active Diagnostic Status Bar -->
+              <div id="editor-hover-bar" class="editor-hover-bar" aria-live="polite">
+                <span class="hover-bar-label">Hover / Cursor Help:</span>
+                <span id="hover-bar-content" class="hover-bar-text">Click or hover over any Sanskrit token to inspect its Prātipadika, Vibhakti, Liṅga, Kāraka role, and SQL mapping.</span>
+              </div>
+            </div>
+
+            <!-- Panel 2: Schema Editor with Syntax Highlighting & Gutter -->
+            <div id="panel-schema" role="tabpanel" aria-labelledby="tab-schema" class="editor-panel" hidden>
+              <div class="schema-toolbar-bar">
+                <span class="scenario-desc">Edit <code>schema.सं</code> live: new tables &amp; columns are applied non-destructively without wiping existing rows.</span>
+                <div class="schema-toolbar-actions">
+                  <button type="button" id="btn-reset-schema" class="btn btn-ghost btn-xs" title="Restore default schema.सं for the active project">
+                    ↺ Reset Schema
+                  </button>
+                  <button type="button" id="btn-apply-schema" class="btn btn-secondary btn-xs">
+                    ↻ Compile &amp; Apply Schema to DB
+                  </button>
+                </div>
+              </div>
+              <div class="code-editor-shell" id="schema-editor-shell">
+                <div id="schema-gutter" class="code-gutter" aria-hidden="true"></div>
+                <div class="code-stage">
+                  <pre id="schema-highlight" class="code-highlight-backdrop" aria-hidden="true"><code></code></pre>
+                  <label for="schema-editor" class="visually-hidden">SSQL Native Schema DDL (schema.सं)</label>
+                  <textarea id="schema-editor" lang="sa" class="code-textarea overlay-textarea" spellcheck="false" autocomplete="off" autocapitalize="off"></textarea>
+                </div>
+              </div>
+              <div class="editor-footer">
+                <span class="scenario-desc">Native Adjectival SSQL DDL (<code>schema.सं</code>). Supports autocomplete (<code>Ctrl+Space</code>) and live syntax highlighting.</span>
+              </div>
+            </div>
+
+            <!-- Panel 3: Reverse SQL -> SSQL Transpiler -->
+            <div id="panel-from-sql" role="tabpanel" aria-labelledby="tab-from-sql" class="editor-panel" hidden>
+              <div class="transpiler-controls">
+                <span>Enter standard SQL (<code>SELECT</code>, <code>CREATE TABLE</code>, <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>):</span>
+                <button type="button" id="btn-transpile-sql" class="btn btn-primary btn-sm">
+                  ⇄ Transpile to SSQL &amp; Load in Editor
+                </button>
+              </div>
+              <div class="code-editor-shell" id="sql-input-editor-shell">
+                <div id="sql-input-gutter" class="code-gutter" aria-hidden="true"></div>
+                <div class="code-stage">
+                  <pre id="sql-input-highlight" class="code-highlight-backdrop" aria-hidden="true"><code></code></pre>
+                  <label for="sql-input-editor" class="visually-hidden">Standard SQL Input for Reverse Transpilation</label>
+                  <textarea id="sql-input-editor" class="code-textarea overlay-textarea" spellcheck="false" autocomplete="off" autocapitalize="off">SELECT title, language, price
+FROM books
+WHERE price > 15 AND language = 'Sanskrit'
+ORDER BY price DESC;</textarea>
+                </div>
+              </div>
+              <div class="editor-footer">
+                <span class="scenario-desc">Uses <code>ssql_compiler::sql_importer::import_sql_to_ssql</code> with the active <code>schema.सं</code> to inflect stems and enforce gender/number concordance.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Pane: Output, Data Table, Adhyeta, Linter, Schema Explorer -->
+          <div class="workspace-pane output-pane">
+            <div class="pane-tabs output-pane-tabs" role="tablist" aria-label="Compiler Outputs">
+              <button type="button" role="tab" aria-selected="true" aria-controls="out-results" id="tab-out-results" class="pane-tab active">
+                <span class="tab-title">परिणामः</span>
+                <span class="tab-sub">Results &amp; SQL</span>
+              </button>
+              <button type="button" role="tab" aria-selected="false" aria-controls="out-adhyeta" id="tab-out-adhyeta" class="pane-tab">
+                <span class="tab-title">अध्येता <span id="badge-tokens" class="tab-badge">0</span></span>
+                <span class="tab-sub">Grammar Breakdown</span>
+              </button>
+              <button type="button" role="tab" aria-selected="false" aria-controls="out-diagnostics" id="tab-out-diagnostics" class="pane-tab">
+                <span class="tab-title">निदानम् <span id="badge-diags" class="tab-badge">0</span></span>
+                <span class="tab-sub">Diagnostics &amp; Lint</span>
+              </button>
+              <button type="button" role="tab" aria-selected="false" aria-controls="out-schema-explorer" id="tab-out-schema-explorer" class="pane-tab">
+                <span class="tab-title">पटलसूची</span>
+                <span class="tab-sub">Schema Explorer</span>
+              </button>
+            </div>
+
+            <!-- Output Panel 1: Generated SQL + Live SQLite Execution Table -->
+            <div id="out-results" role="tabpanel" aria-labelledby="tab-out-results" class="output-panel">
+              <div id="compile-error-banner" class="error-banner" role="alert" aria-live="polite" hidden></div>
+
+              <div class="sql-output-box">
+                <div class="sql-box-header">
+                  <span id="sql-dialect-label" class="sql-box-title">Generated SQL (SQLite)</span>
+                  <button type="button" id="btn-copy-sql" class="btn btn-ghost btn-xs">Copy SQL</button>
+                </div>
+                <div class="sql-pre-shell">
+                  <div id="generated-sql-gutter" class="code-gutter sql-code-gutter" aria-hidden="true"></div>
+                  <pre id="generated-sql-code" class="sql-pre"><code>SELECT * FROM books;</code></pre>
+                </div>
+              </div>
+
+              <div class="execution-results-box">
+                <div class="sql-box-header">
+                  <span id="exec-status-label" class="sql-box-title">Live Query Results (SQLite DB)</span>
+                  <div class="results-header-meta">
+                    <span class="scroll-affordance-pill" id="results-scroll-hint" hidden>⇄ Scroll horizontally for more columns</span>
+                    <span id="exec-row-count" class="row-count-badge">0 rows</span>
+                  </div>
+                </div>
+                <div tabindex="0" role="region" aria-labelledby="results-table-caption" class="table-wrapper" id="results-table-container">
+                  <div class="sentinel-left" aria-hidden="true"></div>
+                  <div class="indicator-left" aria-hidden="true"></div>
+                  <table id="results-data-table">
+                    <caption id="results-table-caption" class="visually-hidden">SQL Query Execution Results</caption>
+                    <thead id="results-thead"></thead>
+                    <tbody id="results-tbody"></tbody>
+                  </table>
+                  <div class="indicator-right" aria-hidden="true"></div>
+                  <div class="sentinel-right" aria-hidden="true"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Output Panel 2: Adhyeta Grammatical Breakdown -->
+            <div id="out-adhyeta" role="tabpanel" aria-labelledby="tab-out-adhyeta" class="output-panel" hidden>
+              <div class="panel-intro">
+                <strong>अध्येता (Adhyetā Pedagogical Inspector):</strong> Every token is analyzed by the Two Pass Vibhakti Annotator and Morphology Engine to resolve its <em>Prātipadika</em> (stem), <em>Vibhakti</em> (case), <em>Vacana</em> (number), <em>Liṅga</em> (gender), and Pāṇinian <em>Kāraka</em> role.
+              </div>
+              <div tabindex="0" role="region" aria-labelledby="adhyeta-table-caption" class="table-wrapper">
+                <table id="adhyeta-table">
+                  <caption id="adhyeta-table-caption" class="visually-hidden">Pāṇinian Morphological and Kāraka Token Breakdown</caption>
+                  <thead>
+                    <tr>
+                      <th>पदम् (Surface)</th>
+                      <th>प्रातिपदिकम् (Stem)</th>
+                      <th>विभक्तिः (Case)</th>
+                      <th>वचनम् (Number)</th>
+                      <th>लिङ्गम् (Gender)</th>
+                      <th>कारकम् (Relational Role)</th>
+                      <th>SQL Mapping</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adhyeta-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Output Panel 3: Compiler Diagnostics & Purity Linter -->
+            <div id="out-diagnostics" role="tabpanel" aria-labelledby="tab-out-diagnostics" class="output-panel" hidden>
+              <div class="panel-intro">
+                <strong>Compiler &amp; Purity Diagnostics:</strong> Reports static <em>Liṅga/Vacana</em> concordance errors with exact line and column spans alongside Pāṇinian padapāṭha style checks.
+              </div>
+              <div id="diagnostics-list" class="diagnostics-list"></div>
+            </div>
+
+            <!-- Output Panel 4: Schema Explorer -->
+            <div id="out-schema-explorer" role="tabpanel" aria-labelledby="tab-out-schema-explorer" class="output-panel" hidden>
+              <div class="panel-intro">
+                <strong>Active Schema Registry (<code>schema.सं</code>):</strong> Click any declined table or column form below to insert it directly into your query.
+              </div>
+              <div id="schema-cards-container" class="schema-cards-grid"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Tutorials & Exercises Section -->
+    <section id="tutorials" class="info-section alt-bg" aria-labelledby="tutorials-heading">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <h2 id="tutorials-heading">पाठ्यावली • Interactive Tutorials &amp; Practical Exercises</h2>
+            <p class="section-subtitle">
+              Read all 10 chapters across <strong>Track A (SSQL for SQL Developers)</strong> and <strong>Track B (Samskrutam Through SSQL)</strong>. Load any code snippet into the Playground or complete the runnable chapter exercise right below each lesson.
+            </p>
+          </div>
+        </div>
+
+        <div class="tutorials-workbench">
+          <!-- Chapter Navigation Sidebar -->
+          <aside class="tutorials-sidebar" aria-label="Tutorial Chapters">
+            <div class="tutorials-sidebar-header">
+              <span class="tutorials-sidebar-title">Chapters (१०)</span>
+              <button type="button" id="btn-reset-tutorial-progress" class="btn btn-ghost btn-xs" title="Clear completed exercise checkmarks">
+                ↺ Reset Progress
+              </button>
+            </div>
+            <div id="tutorial-nav-list" class="tutorial-nav-list"></div>
+          </aside>
+
+          <!-- Chapter Content + Interactive Exercise -->
+          <div class="tutorial-main">
+            <article id="tutorial-article" class="tutorial-article" aria-live="polite">
+              <p>Loading tutorial chapter…</p>
+            </article>
+
+            <!-- Interactive Chapter Exercise Card -->
+            <div id="tutorial-exercise-card" class="exercise-card">
+              <div class="exercise-header">
+                <div>
+                  <span class="card-tag">Interactive Chapter Exercise • अभ्यासः</span>
+                  <h3 id="exercise-title">Exercise</h3>
+                </div>
+                <span id="exercise-status-badge" class="exercise-badge">Not Attempted</span>
+              </div>
+              <p id="exercise-prompt" class="exercise-prompt"></p>
+
+              <div class="exercise-editor-wrap">
+                <div class="code-editor-shell exercise-editor-shell" id="exercise-editor-shell">
+                  <div id="exercise-gutter" class="code-gutter" aria-hidden="true"></div>
+                  <div class="code-stage exercise-code-stage">
+                    <pre id="exercise-highlight" class="code-highlight-backdrop exercise-highlight" aria-hidden="true"><code></code></pre>
+                    <label for="exercise-editor" class="visually-hidden">Exercise SSQL Answer Editor</label>
+                    <textarea id="exercise-editor" class="code-textarea overlay-textarea exercise-textarea" spellcheck="false" autocomplete="off" autocapitalize="off"></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <div class="exercise-actions">
+                <button type="button" id="btn-exercise-check" class="btn btn-primary btn-sm">
+                  ▶ Run &amp; Check Answer
+                </button>
+                <button type="button" id="btn-exercise-hint" class="btn btn-secondary btn-sm">
+                  💡 Show Hint
+                </button>
+                <button type="button" id="btn-exercise-solution" class="btn btn-ghost btn-sm">
+                  ✓ Reveal Solution
+                </button>
+                <button type="button" id="btn-exercise-open-playground" class="btn btn-ghost btn-sm">
+                  ↗ Open in Main Playground
+                </button>
+              </div>
+
+              <div id="exercise-hint-box" class="exercise-hint-box" hidden></div>
+              <div id="exercise-feedback-box" class="exercise-feedback-box" hidden></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Direct Downloads Section -->
+    <section id="downloads" class="info-section" aria-labelledby="downloads-heading">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <h2 id="downloads-heading">उपकरणानि • Download Compiler, VS Code Extension (.vsix), LSP &amp; SDKs</h2>
+            <p class="section-subtitle">
+              Prebuilt release packages for VS Code (<code>.vsix</code>), WebAssembly, and macOS ARM64 (Apple Silicon) are available below with full SHA256 checksums. On Linux, Windows, or Intel macOS, build from source with <code>cargo install --path .</code>, <code>cargo install --path ssql-lsp</code>, and <code>uv pip install ./ssql-py</code>.
+            </p>
+          </div>
+        </div>
+
+        <div id="downloads-grid" class="downloads-grid"></div>
+      </div>
+    </section>
+
+    <!-- Inline SSQL Constitution Section -->
+    <section id="constitution" class="info-section alt-bg" aria-labelledby="constitution-heading">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <span class="card-tag">संविधानम् • Foundational Charter</span>
+            <h2 id="constitution-heading">The Samskrutam Relational Query Language (SSQL): The v1.0 Design Principles (Constitution)</h2>
+            <p class="section-subtitle">
+              Every grammatical rule, compiler pass, and graphemic purity requirement in SSQL is governed by these ten foundational principles.
+            </p>
+          </div>
+        </div>
+
+        <div id="constitution-articles" class="constitution-grid"></div>
+        <blockquote id="constitution-closing" class="constitution-closing"></blockquote>
+      </div>
+    </section>
+
+    <!-- Karaka Mapping Section -->
+    <section id="karaka-system" class="info-section" aria-labelledby="karaka-heading">
+      <div class="container">
+        <h2 id="karaka-heading">पाणिनीयकारकतन्त्रम् • Pāṇinian Kāraka to Relational Mapping</h2>
+        <p class="section-subtitle">
+          In Pāṇini’s <em>Aṣṭādhyāyī</em> (1.4.23 to 1.4.55), participants in an action bear semantic roles (<em>Kārakas</em>) expressed via nominal case endings (<em>Vibhaktis</em>) around a central passive imperative verb (<em>Karmaṇi Loṭ</em>).
+        </p>
+
+        <div tabindex="0" role="region" aria-labelledby="karaka-table-caption" class="table-wrapper karaka-table-wrapper">
+          <table class="karaka-mapping-table" style="--label-1: 'Vibhakti / Form'; --label-2: 'Kāraka Role'; --label-3: 'Relational Construct'; --label-4: 'SSQL Example';">
+            <caption id="karaka-table-caption" class="visually-hidden">Mapping between Sanskrit Vibhakti, Pāṇinian Kāraka, and SQL Constructs</caption>
+            <thead>
+              <tr>
+                <th>विभक्तिः / प्रत्ययः (Case / Form)</th>
+                <th>कारकम् (Semantic Role)</th>
+                <th>SQL Construct</th>
+                <th>SSQL Example (<code>.सं</code>)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>प्रथमा (1st, Nominative)</th>
+                <td>उक्तकर्म (Projected Object)</td>
+                <td><code>SELECT</code> Columns &amp; Aliases</td>
+                <td><code>शीर्षकम् च मूल्यम् च आह्रियेताम्</code></td>
+              </tr>
+              <tr>
+                <th>द्वितीया (2nd, Accusative)</th>
+                <td>कर्म (Direct Object of Action)</td>
+                <td>UDF Arguments &amp; Positional Supply</td>
+                <td><code>मूल्यम् च ५ च प्रदाय करसहितमूल्यम्</code></td>
+              </tr>
+              <tr>
+                <th>तृतीया (3rd, Instrumental)</th>
+                <td>करणम् / सहार्थे (Instrument / Association)</td>
+                <td><code>JOIN</code>, <code>WHERE</code>, <code>GROUP BY</code>, <code>ORDER BY</code></td>
+                <td><code>आपणैः सह ... इति मेलनेन</code>, <code>इति नियमेन</code>, <code>इति समूहेन</code></td>
+              </tr>
+              <tr>
+                <th>चतुर्थी (4th, Dative)</th>
+                <td>सम्प्रदानम् (Recipient)</td>
+                <td>Reserved for <code>GRANT … TO</code> (not yet parsed)</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <th>पञ्चमी (5th, Ablative)</th>
+                <td>अपादानम् (Source of Extraction); the ablative of comparison (“than”)</td>
+                <td><code>FROM</code> Table / CTE &amp; <code>&gt;</code> / <code>&lt;</code> Comparisons</td>
+                <td><code>पुस्तकेभ्यः</code>, <code>२० इत्यस्मात् अधिकम्</code></td>
+              </tr>
+              <tr>
+                <th>षष्ठी (6th, Genitive)</th>
+                <td>सम्बन्धः (Possession / Genitive Qualifier)</td>
+                <td><code>table.column</code> &amp; Aggregate Argument</td>
+                <td><code lang="sa">पुस्तकस्य शीर्षकम्</code>, <code lang="sa">मूल्यस्य माध्यम्</code></td>
+              </tr>
+              <tr>
+                <th>सप्तमी (7th, Locative)</th>
+                <td>अधिकरणम् (Locus of Mutation / Partition)</td>
+                <td><code>INSERT INTO</code>, <code>UPDATE</code>, <code>OVER (PARTITION BY)</code></td>
+                <td><code>पुस्तकेषु ... निवेश्यताम्</code>, <code>छात्रेषु ... परिवर्त्यताम्</code></td>
+              </tr>
+              <tr>
+                <th>ल्यप् (Absolutive / कृदन्तः)</th>
+                <td>पूर्वकालिकक्रिया (Argument Supply)</td>
+                <td>Pure UDF Invocation</td>
+                <td><code>मूल्यम् च ५ च प्रदाय करसहितमूल्यम्</code> (“having supplied price and 5”)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Compiler Architecture & Features -->
+    <section id="features" class="info-section alt-bg" aria-labelledby="features-heading">
+      <div class="container">
+        <h2 id="features-heading">Static Grammatical Type Checking &amp; Compiler Pipeline</h2>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <h3>1. Three Gender Concordance (लिङ्गसमन्वयः)</h3>
+            <p>
+              Every column in <code>schema.सं</code> declares its grammatical gender: Masculine (<code>पुंलिङ्गम्</code>), Feminine (<code>स्त्रीलिङ्गम्</code>), or Neuter (<code>नपुंसकलिङ्गम्</code>). Comparison pronouns (<code>इत्यनेन</code> vs. <code>इत्यनया</code>, <code>इत्यस्मात्</code> vs. <code>इत्यस्याः</code>) and predicate adjectives (<code>समः/समा/समम्</code>, <code>अधिकः/अधिका/अधिकम्</code>, <code>रिक्तः/रिक्ता/रिक्तम्</code>) are statically verified against the subject column’s gender.
+            </p>
+          </article>
+          <article class="feature-card">
+            <h3>2. Subject and Verb Number Agreement (वचनसमन्वयः)</h3>
+            <p>
+              Because SSQL queries are passive imperative sentences (<em>Karmaṇi Prayoga</em>), the terminal verb must agree in grammatical number with the count of projected columns:
+              <code>आह्रियताम्</code> (1 column, <code>एकवचनम्</code>), <code>आह्रियेताम्</code> (2 columns, <code>द्विवचनम्</code>), or <code>आह्रियन्ताम्</code> (3+ columns, <code>बहुवचनम्</code>); <code>सर्वम्</code>, the collective shorthand for all table columns, is neuter singular and takes <code>आह्रियताम्</code>. Changing a projection between 1, 2, and 3+ columns without updating the verb is caught at compile time!
+            </p>
+          </article>
+          <article class="feature-card">
+            <h3>3. Pure User Defined Functions (शुद्धम् कार्यम्)</h3>
+            <p>
+              Declare a pure function’s parameters with the passive verb (<code>दीयते/दीयेते/दीयन्ते</code>, “is given”), and invoke them via Genitive (<code>मूल्यस्य द्विगुणितम्</code>) or <code>प्रदाय</code> (“having supplied”). The compiler expands them safely across both SQLite and PostgreSQL.
+            </p>
+          </article>
+          <article class="feature-card">
+            <h3>4. Bidirectional SQL ⇄ SSQL &amp; Tooling</h3>
+            <p>
+              Migrate existing SQL codebases effortlessly with <code>--from-sql</code>, enforce canonical indentation with <code>--fmt</code>, verify Pāṇinian padapāṭha purity with <code>--lint</code>, and enjoy full IDE support with <code>ssql-lsp</code> and the VS Code Extension.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>
+        <strong>संस्कृतम् SQL (SSQL)</strong> • Open Source Pāṇinian Relational Query Compiler
+        (<a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="noopener noreferrer">Apache 2.0 License</a>)
+      </p>
+      <p class="footer-sub">
+        <a href="https://github.com/performance/SSQL" target="_blank" rel="noopener noreferrer">GitHub Repository</a> •
+        <a href="#constitution">SSQL v1.0 Constitution (वाचिकता तथा शुद्धता)</a> •
+        <a href="#downloads">Download CLI, LSP &amp; VSIX</a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- Optional sql.js CDN for pure static hosting; falls back automatically to local server or embedded engine -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js" defer></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

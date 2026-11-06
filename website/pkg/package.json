@@ -1,0 +1,17 @@
+{
+  "name": "ssql-wasm",
+  "type": "module",
+  "description": "WebAssembly bindings for the SSQL (Samskrtam SQL) compiler, formatter, linter, grammatical analyzer (Adhyeta), and reverse SQL->SSQL transpiler",
+  "version": "0.2.1",
+  "license": "Apache-2.0",
+  "files": [
+    "ssql_wasm_bg.wasm",
+    "ssql_wasm.js",
+    "ssql_wasm.d.ts"
+  ],
+  "main": "ssql_wasm.js",
+  "types": "ssql_wasm.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}

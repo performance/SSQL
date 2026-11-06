@@ -1,0 +1,22 @@
+{
+  "_comment": "Canonical-vocabulary gate for SSQL. `denied` lists non-Sanskrit or wrong words that must not appear in any user-facing text (keywords, identifiers, examples, docs, UI, converter output, messages); each entry matches as a substring of a Devanagari word. Orthography rules (final anusvāra, anusvāra before a stop, chandrabindu, nukta, underscores) are applied in code. An entry with `retired_keyword` was once an SSQL keyword; the lexer rejects any word containing it, with the replacement as a hint. A line that must name a denied word (e.g. the compiler's hint table) carries the marker `lexicon-allow` and is only permitted in .rs/.py files.",
+  "denied": [
+    { "word": "सरासरी", "why": "Marathi/Hindi (from Persian sar-ā-sar), not Sanskrit", "use": "माध्यम्", "retired_keyword": true },
+    { "word": "औसत", "why": "Hindi/Urdu (from Arabic awsaṭ), not Sanskrit", "use": "माध्यम्", "retired_keyword": true },
+    { "word": "कपात", "why": "Marathi for 'deduction', not Sanskrit", "use": "व्यवकलनम् / कर्तनम्" },
+    { "word": "क्लॉज", "why": "English 'clause' in Devanagari", "use": "खण्डः" },
+    { "word": "बाहिर", "why": "Hindi for 'outside'", "use": "बाह्य" },
+    { "word": "ईपत्र", "why": "English 'e-' prefix", "use": "विद्युत्पत्रम्" },
+    { "word": "पिज्जा", "why": "transliterated loan", "use": "पिष्टकम्" },
+    { "word": "पिच्चा", "why": "transliterated loan", "use": "पिष्टकम्" },
+    { "word": "जीन", "why": "transliterated English 'gene'", "use": "वंशाणुः" },
+    { "word": "घण्टा", "why": "Hindi sense 'hour' (Sanskrit घण्टा is a bell)", "use": "होरा" },
+    { "word": "प्रायोजन", "why": "Hindi 'sponsorship'; not a classical word", "use": "अवस्था" },
+    { "word": "उपरिचर्य", "why": "not a Sanskrit word", "use": "परोक्षव्ययः" },
+    { "word": "प्रकाशिन", "why": "प्रकाशिन् means 'shining', not 'publisher'", "use": "प्रकाशक" },
+    { "word": "अवकर", "why": "अवकर means sweepings/refuse, not 'discount'", "use": "मूल्यह्रासः" },
+    { "word": "महत्व", "why": "misspelling", "use": "महत्त्व" },
+    { "word": "दीर्घन्", "why": "not a word", "use": "दीर्घ" },
+    { "word": "चिन्ह", "why": "Hindi misspelling", "use": "चिह्न" }
+  ]
+}

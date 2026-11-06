@@ -1,0 +1,14 @@
+[package]
+name = "university_bookstore"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+# Stand alone crate, not a member of the root workspace.
+[workspace]
+
+[dependencies]
+sqlx = { version = "0.7", features = ["runtime-tokio", "sqlite", "postgres", "chrono"] }
+tokio = { version = "1", features = ["full"] }
+anyhow = "1.0"
+chrono = "0.4"

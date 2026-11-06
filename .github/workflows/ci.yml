@@ -1,0 +1,128 @@
+name: CI
+
+on:
+  push:
+    branches: [research_preview, main]
+  pull_request:
+    branches: [research_preview, main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    # Postgres for the second dialect: verify_all.py checks that SQLite and
+    # Postgres return the same rows for every example query.
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: bookstore_pg
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      SSQL_PG_URL: postgres://postgres:postgres@localhost:5432/bookstore_pg
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+
+      - name: Cache cargo registry and build artifacts
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      # ssql-py (the pyo3/cdylib Python bindings crate) is intentionally
+      # excluded here - it's meant to be built via maturin (which sets up
+      # extension-module linking correctly), not plain cargo build/test.
+      - name: Build
+        run: cargo build --release -p ssql_compiler -p ssql-lsp
+
+      - name: Test
+        run: cargo test --release -p ssql_compiler -p ssql-lsp
+
+      - name: Clippy (advisory)
+        run: cargo clippy -p ssql_compiler -p ssql-lsp -- -W clippy::all
+        continue-on-error: true
+
+      - name: Install cargo-audit
+        uses: taiki-e/install-action@cargo-audit
+
+      - name: Dependency security audit
+        run: cargo audit
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+
+      # Both dialects: compile, execute, cross-dialect agreement, golden
+      # results, tutorial snippets vs their paired SQL, quizzes, and
+      # freshness of committed compiled SQL.
+      - name: Verify example corpus (SQLite and Postgres)
+        run: uv run verify_all.py --dialect all
+
+  website-and-parity:
+    # The playground, the Python binding and the CLI must accept the same
+    # language and emit the same SQL (scripts/check_frontend_parity.py).
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust (with the wasm32 target)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Cache cargo registry and build artifacts
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+            website/ssql-wasm/target
+          key: ${{ runner.os }}-cargo-web-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Install wasm-pack
+        uses: taiki-e/install-action@wasm-pack
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install VS Code extension build dependencies
+        run: npm ci
+        working-directory: editors/vscode
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+
+      - name: Build compiler and language server
+        run: cargo build --release -p ssql_compiler -p ssql-lsp
+
+      - name: WebAssembly crate tests
+        run: cargo test --release
+        working-directory: website/ssql-wasm
+
+      # Rebuilds the WASM bundle, Python wheel, downloads and site data from
+      # the sources in this commit, so the checks below run on fresh builds.
+      - name: Build website bundles
+        run: uv run python3 website/build_site.py
+
+      - name: Python binding and website tests
+        run: uv run pytest
+
+      - name: Front-end parity (CLI, WASM, Python)
+        run: uv run python3 scripts/check_frontend_parity.py

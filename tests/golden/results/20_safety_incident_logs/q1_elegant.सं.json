@@ -1,0 +1,20 @@
+[
+[
+"1",
+"System crashed with ERR102: memory overflow",
+"High",
+"ERR102"
+],
+[
+"2",
+"Overheating detected ERR404: sensor fault",
+"Medium",
+"ERR404"
+],
+[
+"3",
+"Minor leakage ERR901: valve loose",
+"Low",
+"ERR901"
+]
+]

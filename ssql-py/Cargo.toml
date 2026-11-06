@@ -1,0 +1,17 @@
+[package]
+name = "ssql-py"
+version = "0.2.1"
+edition = "2021"
+description = "Python bindings for SSQL (Samskrtam SQL)"
+license = "Apache-2.0"
+repository = "https://github.com/performance/SSQL"
+publish = false
+
+[lib]
+name = "ssql" # The python module name
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.29", features = ["extension-module", "anyhow"] }
+ssql_compiler = { path = "../", version = "0.2.1" }
+anyhow = "1.0"

@@ -1,0 +1,2 @@
+- Seq Scan on sales  (cost=0.00..1.07 rows=1 width=36)
+-   Filter: ((sale_date > '2023-01-01 00:00:00'::timestamp without time zone) AND (store_id = 1))

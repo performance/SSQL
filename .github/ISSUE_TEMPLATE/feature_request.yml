@@ -1,0 +1,29 @@
+name: Feature request
+description: Propose a new SSQL language feature, syntax, or compiler capability.
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: What can't you currently express in SSQL, or what's awkward about the current syntax?
+    validations:
+      required: true
+  - type: textarea
+    id: proposed-syntax
+    attributes:
+      label: Proposed SSQL syntax
+      description: A concrete example of the Sanskrit syntax you're proposing, and the SQL it should compile to.
+      render: text
+    validations:
+      required: false
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+    validations:
+      required: false
+  - type: markdown
+    attributes:
+      value: |
+        For a non-trivial grammar/syntax change, describe the syntax, the grammatical reasoning, and the alternatives considered - see [CONTRIBUTING.md](https://github.com/performance/SSQL/blob/research_preview/CONTRIBUTING.md).

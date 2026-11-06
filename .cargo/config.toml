@@ -1,0 +1,6 @@
+[env]
+# The bundled SQLite used by tests/language_rules_test.rs must match the
+# SQLite that SSQL targets: 3.35+ with the math functions (mod, sqrt, power,
+# …) that compiled SQL calls. Standard builds (the sqlite3 CLI, Python's
+# sqlite3) enable them; libsqlite3-sys's bundled build does not by default.
+LIBSQLITE3_FLAGS = "-DSQLITE_ENABLE_MATH_FUNCTIONS"

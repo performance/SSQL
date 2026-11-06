@@ -1,0 +1,12 @@
+
+venv/
+target/
+*.toml
+!Cargo.toml
+!pyproject.toml
+__pycache__/
+*.so
+# Compiler debug-dump artifacts (--dump-ast/--dump-resolved/--dump-symtable)
+*.ast
+*.resolved.ast
+*.sym

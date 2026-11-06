@@ -1,0 +1,53 @@
+[package]
+name = "ssql_compiler"
+version = "0.2.1"
+edition = "2021"
+description = "A compiler for SSQL (Samskrtam SQL) - a Sanskrit-based query language that compiles to SQL (SQLite, PostgreSQL)"
+license = "Apache-2.0"
+repository = "https://github.com/performance/SSQL"
+readme = "README.md"
+# Without this, `cargo package`/`cargo publish` would sweep in the whole
+# repo (examples/, docs/, website/, etc.) - only the compiler itself needs
+# to ship in the published crate.
+include = ["src/**/*", "/Cargo.toml", "/LICENSE", "/README.md"]
+
+[workspace]
+members = ["ssql-lsp", "ssql-py"]
+
+[dependencies]
+# CLI and Error Handling
+clap = { version = "4.4", features = ["derive"] }
+anyhow = "1.0"
+thiserror = "1.0"
+
+# File I/O and Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# String manipulation and Unicode
+unicode-segmentation = "1.10"
+
+# Parser combinators (like Haskell's parsec)
+chumsky = { version = "0.13", features = ["memoization"] }
+
+# Logging
+log = "0.4"
+env_logger = "0.11"
+
+# Collections and utilities
+indexmap = "2.1"
+
+[dev-dependencies]
+pretty_assertions = "1.4"
+# Prepares compiled SQL in tests/language_rules_test.rs, so a query that
+# compiles to invalid SQL fails the suite instead of shipping.
+rusqlite = { version = "0.40", features = ["bundled"] }
+
+
+[profile.dev]
+debug = false
+strip = true
+
+[profile.release]
+debug = false
+strip = true
